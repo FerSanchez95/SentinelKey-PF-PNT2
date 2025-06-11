@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { signOut } from '../../auth/auth.service';
-import { useUserStorage } from '../../stores/useUserStorage';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signOut } from "../../auth/auth.service";
+import { useUserStorage } from "../../stores/useUserStorage";
 
 export default function SignOutButton() {
   const navigate = useNavigate();
@@ -28,10 +28,10 @@ export default function SignOutButton() {
       onClick={handleSignOut}
       disabled={loading}
       className={`px-4 py-2 rounded-md font-semibold text-white ${
-        loading ? 'bg-gray-400' : 'bg-red-600 hover:bg-red-500'
+        loading ? "bg-gray-400" : "bg-red-600 hover:bg-red-500"
       }`}
     >
-      {loading ? 'Signing out...' : 'Sign Out'}
+      {loading ? "Signing out..." : "Sign Out"}
     </button>
   );
 }
