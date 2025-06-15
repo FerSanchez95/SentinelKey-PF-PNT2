@@ -97,8 +97,7 @@ VITE_TOKEN_SECRET=clave-super-secretarm
 
 - `main`: rama estable para producción
 - `develop`: rama de desarrollo
-- `feature/*`: ramas para nuevas funcionalidades
-- `fix/*`: ramas para corrección de errores
+- `rama-usuario`: La rama propia de cada contribuidor
 
 ### 🚀 Correr la aplicación
 
