@@ -1,18 +1,19 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { signUp } from '../../auth/auth.service';  // Asegurate de tener este método en auth.service
-import { useUserStorage } from '../../stores/useUserStorage';
-import { Link } from 'react-router-dom';
+import { registrarUsuario, completarRegistro, IniciarSesion } from '../../auth/auth.service.js';
+//import { useAuthStore } from '../../stores/authStore.js';
+import { Link } from 'react-router';
 
 
 export default function SignUp() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+  const nombreRef = useRef(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const { setUser } = useUserStorage();
+  //const { login } = useAuthStore();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -20,21 +21,34 @@ export default function SignUp() {
     setError(null);
     
     try {
-      const { user, error: signUpError } = await signUp(
-        emailRef.current.value,
-        passwordRef.current.value
+      const emailOk = emailRef.current.value;
+      const passwordOk = passwordRef.current.value;
+      const nombreOk = nombreRef.current.value;
+
+      
+
+      const { user, error: signUpError } = await registrarUsuario(
+        emailOk,
+        passwordOk
       );
 
       if (signUpError) {
         throw signUpError;
       }
 
-      setUser(user);
+      // completo el registro pasando las varables faltantes  alatabla 'usuarios'
+      const { error: insertError } = await completarRegistro(user, nombreOk);
 
-      navigate("/profile");
-    } catch (err) {
-      console.error(err.message);
-      setError(err.message || 'Error during sign up');
+      if (insertError){
+        throw insertError;
+      }
+
+//      login(user);
+
+      navigate("/");
+
+    } catch(err) {
+      setError(err.message ?? 'Ocurrio un error durante el registro');
     } finally {
       setLoading(false);
     }
@@ -49,15 +63,31 @@ export default function SignUp() {
           className="mx-auto h-10 w-auto"
         />
         <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
-          Create your account
+          Registrar usuario
         </h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form className="space-y-6">
           <div>
+            <label htmlFor="nombre" className="block text-sm font-medium text-gray-900">
+              Nombre de usuario
+            </label>
+            <div className="mt-2">
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                required
+                autoComplete="nombre"
+                ref={nombreRef}
+                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+              />
+            </div>
+          </div>
+          <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-900">
-              Email address
+              Dirección de e-Mail
             </label>
             <div className="mt-2">
               <input
@@ -112,7 +142,7 @@ export default function SignUp() {
         <p className="mt-10 text-center text-sm text-gray-500">
           Already have an account?{' '}
            <Link to="/signin" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                Sign in
+                Ingresar al sitio
             </Link>
         </p>
       </div>

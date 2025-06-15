@@ -1,16 +1,20 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { signIn } from '../../auth/auth.service';
-import { useUserStorage } from '../../stores/useUserStorage';
+import { IniciarSesion } from '../../auth/auth.service.js';
+import { useAuthStore } from '../../stores/authStore.js'
+import { Link } from 'react-router';
 
 export default function SignIn() {
+  
   const emailRef = useRef('');
   const passwordRef = useRef('');
+  
   const navigate = useNavigate()
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const { setUser } = useUserStorage()
+  const { login } = useAuthStore()
 
   const handleLogin = async (e) => {
     e.preventDefault(); 
@@ -18,16 +22,20 @@ export default function SignIn() {
     setError(null);
     try {
 
-      const { user } = await signIn(emailRef.current.value, passwordRef.current.value);
+      const { user } = await IniciarSesion(emailRef.current.value, passwordRef.current.value);
 
-      setUser(user)
+      login(user)
+      navigate("/usuario")
 
-      navigate("/profile")
     } catch (err) {
+
       console.error(err.message);
       setError(err.message || 'Error during sign in');
+
     } finally {
+
       setLoading(false);
+
     }
   }
 
@@ -41,7 +49,7 @@ export default function SignIn() {
             className="mx-auto h-10 w-auto"
           />
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            Sign in to your account
+            Ingresa a tu cuenta
           </h2>
         </div>
 
@@ -49,7 +57,7 @@ export default function SignIn() {
           <form className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
-                Email address
+                Dirección de eMail
               </label>
               <div className="mt-2">
                 <input
@@ -104,9 +112,9 @@ export default function SignIn() {
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
-            Not a member?{' '}
+            ¿No tienes una cuenta?{' '}
             <Link to="/signup" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                Sign up
+                ¡Registrate!
             </Link>
           </p>
         </div>
