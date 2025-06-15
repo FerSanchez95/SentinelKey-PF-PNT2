@@ -88,7 +88,7 @@ my-react-app/
 ```env
 # Ejemplo de archivo .env
 VITE_API_URL=https://api.sentinelkey.com
-VITE_TOKEN_SECRET=clave-super-secreta
+VITE_TOKEN_SECRET=clave-super-secretarm 
 ```
 
 > ⚠️ No subas este archivo al repositorio (está en `.gitignore` por seguridad).
