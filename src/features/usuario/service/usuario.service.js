@@ -45,52 +45,65 @@ export const cargarDatosUsuario = async ({ estaRegistrado = false, user = null }
 
 
 
-export async function obtenerDatosUsuario(usuarioId) {
+export const obtenerDatosUsuario = async(usuarioId) => {
+
+  if (!usuarioId || typeof usuarioId !== 'string') {
+    throw new Error("ID de usuario inválido");
+  }
 
   try {
-    const { nombre, email } = await obtenerDatos(usuarioId);
-    const cantidadPass = await obtenerCantidadPasswords(usuarioId);
+    const datos = await obtenerDatos(usuarioId);
+    let cantidadPass = await obtenerCantidadPasswords(usuarioId);
+
+
+    if(!cantidadPass){
+      cantidadPass = 0;
+    }
+
+    // console.log("Datos:", datos);
+    // console.log("Contraseñas:", cantidadPass)
 
     const datosUsuario = {
-      nombre,
-      email,
+      nombre: datos?.data?.nombre,
+      email: datos?.data?.email,
       cantidadPass,
     };
 
     return datosUsuario;
 
-  } catch (error) {
+  } catch (err) {
 
-   throw new Error(error.message);
+   throw new Error(err.message);
 
   }
   
 }
+const obtenerDatos = async(usuarioId) => {
 
-async function obtenerCantidadPasswords(usuarioId) {
-  const { cantidadPass, error } = await supabase
+  console.log(usuarioId)
+  const { data, error } = await supabase
+    .from("usuarios")
+    .select("nombre, email")
+    .eq("id", usuarioId)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return {data, error};
+}
+
+const obtenerCantidadPasswords= async(usuarioId) => {
+  const { count, error } = await supabase
     .from("Password")
     .select("*", { count: "exact", head: true })
-    .eq("id", usuarioId);
+    .eq('usuario_id', usuarioId)
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return cantidadPass;
+  return count;
 }
 
-async function obtenerDatos(usuarioId) {
-  const { nombre, email, error } = await supabase
-    .from("usuarios")
-    .select(nombre, email)
-    .eq("id", usuarioId);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  const datos = { nombre, email };
-
-  return datos;
-}
