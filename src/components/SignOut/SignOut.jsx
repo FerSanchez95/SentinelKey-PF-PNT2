@@ -1,37 +1,48 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { signOut } from '../../auth/auth.service';
-import { useAuthStore } from '../../stores/authStore.js'
+import { useAuthStore } from '../../stores/authStore.js';
+import Boton from '../Button/Button.jsx';
+import Modal from '../Modal/Modal.jsx';
 
-export default function SignOutButton() {
+export default function SignOut() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const { logout } = useAuthStore();
+  
+  const [modalAbierto, setModalAbierto] = useState(false);
 
   const handleSignOut = async () => {
-    setLoading(true);
     try {
       await signOut();
 
       logout(null);
 
       navigate("/signin");
+
     } catch (err) {
       console.error("Error al cerrar sesión:", err.message);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
+  const abrirModal = () => setModalAbierto(true);
+  const cerrarModal = () => setModalAbierto(false);
+
+  const confirmarAccion = () => {
+    handleSignOut();
+    cerrarModal();
+  };
+
+  useEffect(()=>{abrirModal();}, [])
+
   return (
-    <button
-      onClick={handleSignOut}
-      disabled={loading}
-      className={`px-4 py-2 rounded-md font-semibold text-white ${
-        loading ? 'bg-gray-400' : 'bg-red-600 hover:bg-red-500'
-      }`}
-    >
-      {loading ? 'Cerrando sesión...' : 'Se ha cerrado la sesión'}
-    </button>
+      <Modal
+        isOpen={modalAbierto}
+        onClose={cerrarModal}
+        onConfirm={confirmarAccion}
+        mensaje="¿Estás seguro de que deseas cerrar sesión?"
+        textoCancelar="Cancelar"
+        textoConfirmar="Cerrar sesión"
+        tipoConfirmar="eliminar"
+      />
   );
 }

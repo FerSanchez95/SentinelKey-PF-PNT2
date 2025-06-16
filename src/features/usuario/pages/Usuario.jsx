@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { obtenerDatosUsuario } from "../service/usuario.service.js";
+import Boton from "../../../components/Button/Button.jsx";
+import { Home } from 'lucide-react';
 
 export default function Usuario(data) {
   
@@ -21,7 +23,7 @@ export default function Usuario(data) {
 
    // Manejador para cerrar sesión.
   const handleSingOut = () => {
-    navigate("/singout");
+    navigate("/signout");
   }
 
 
@@ -105,25 +107,15 @@ export default function Usuario(data) {
               </div>
             )}
 
-        <div className="flex flex-col space-y-3">
-          <button
-            onClick={handleEditProfile}
-            className="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          >
-            Editar perfil
-          </button>
+        <div className="flex flex-col space-y-3 gap-4">
+          <Boton tipo="editar" onClick={handleEditProfile}>Editar Perfil</Boton>
           <button
             onClick={handleSingOut}
             className="w-full rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400"
           >
             Cerrar sesión
           </button>
-          <button
-            onClick={handleGoHome}
-            className="w-full rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-          >
-            Volver a la página principal
-          </button>
+          <Boton onClick={handleGoHome} iconoPersonalizado={<Home className="w-4 h-4 mr-2" />}> Volver</Boton>
         </div>
       </div>
     </div>
