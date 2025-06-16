@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { IniciarSesion } from '../../auth/auth.service.js';
-import { useAuthStore } from '../../stores/authStore.js'
 import { Link } from 'react-router';
 //import { cargarDatosUsuario } from '../../features/usuario/service/usuario.service.js';
 
