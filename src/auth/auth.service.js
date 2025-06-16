@@ -3,8 +3,9 @@ import {
   generarSaltEnBruto,
   crearSaltBase64,
 } from "../service/saltHandler.js";
-import { cargarDatosUsuario } from '../features/usuario/service/usuario.service.js'
+//import { cargarDatosUsuario } from '../features/usuario/service/usuario.service.js'
 import { useAuthStore } from "../stores/authStore.js";
+import { cargarDatosUsuario } from "../features/usuario/service/usuario.service.js";
 
 export async function registrarUsuario( email, password) {
 
@@ -43,13 +44,13 @@ export async function completarRegistro(user, nombre){
 }
 
 export async function IniciarSesion(email, password){
-  const {error} = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error} = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return await cargarDatosUsuario({ estaRegistrado: false})
+  return await cargarDatosUsuario({ estaRegistrado: true, user: data.user});
 }
 
 export const signOut = async () => {

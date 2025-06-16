@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { IniciarSesion } from '../../auth/auth.service.js';
 import { useAuthStore } from '../../stores/authStore.js'
 import { Link } from 'react-router';
+//import { cargarDatosUsuario } from '../../features/usuario/service/usuario.service.js';
 
 export default function SignIn() {
   
@@ -14,18 +15,23 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const { login } = useAuthStore()
-
   const handleLogin = async (e) => {
+
+    console.log(emailRef.current.value, passwordRef.current.value);
+
     e.preventDefault(); 
     setLoading(true);
     setError(null);
     try {
 
-      const { user } = await IniciarSesion(emailRef.current.value, passwordRef.current.value);
+      const { error: inicioInvalido } = await IniciarSesion(emailRef.current.value, passwordRef.current.value);
 
-      login(user)
-      navigate("/usuario")
+      if (inicioInvalido) {
+        console.log(inicioInvalido.message)
+        setError("Ocurrió un error al iniciar sesión")
+      }
+
+      navigate("/perfil")
 
     } catch (err) {
 
@@ -100,7 +106,7 @@ export default function SignIn() {
             <div>
               <button
                 type="submit"
-                onSubmit={handleLogin}
+                onClick={handleLogin}
                 disabled={loading}
                 className={`flex w-full justify-center rounded-md ${
                   loading ? 'bg-indigo-400' : 'bg-indigo-600'

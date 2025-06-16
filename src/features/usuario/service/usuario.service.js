@@ -17,8 +17,8 @@ export const cargarDatosUsuario = async ({ estaRegistrado = false, user = null }
         store.login(data.user)
         
         return {
-            message: "¡Bienvenido!",
-            user: data.user
+          user: data.user,
+          message: "¡Bienvenido!"
         }
     }
 
@@ -37,8 +37,9 @@ export const cargarDatosUsuario = async ({ estaRegistrado = false, user = null }
     store.login(currentUser)
 
     return {
-        message: `¡Hola ${currentUser.email}! Se cargaron tus recetas favoritas.`,
-        user: currentUser
+      user: currentUser,  
+      message: `¡Hola ${currentUser.email}! Se cargaron tus recetas favoritas.`
+        
     }
 }
 
