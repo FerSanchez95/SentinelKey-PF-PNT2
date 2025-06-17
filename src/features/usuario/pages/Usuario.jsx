@@ -53,7 +53,7 @@ export default function Usuario(data) {
 
   useEffect(() => {
     cargaDeDatos();
-  },[]);
+  },[]); //<- ESLint te sugiere sacar el array de dependencias vacío... No lo hagas, se rompe todo :)
 
 
     if (cargando) {
