@@ -53,7 +53,7 @@ export default function Usuario(data) {
 
   useEffect(() => {
     cargaDeDatos();
-  }, []);
+  });
 
 
     if (cargando) {
