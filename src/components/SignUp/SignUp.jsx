@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { registrarUsuario, completarRegistro, IniciarSesion } from '../../auth/auth.service.js';
-//import { useAuthStore } from '../../stores/authStore.js';
+import { registrarUsuario, completarRegistro} from '../../auth/auth.service.js';
 import { Link } from 'react-router';
 
 
@@ -13,7 +12,6 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  //const { login } = useAuthStore();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -24,8 +22,6 @@ export default function SignUp() {
       const emailOk = emailRef.current.value;
       const passwordOk = passwordRef.current.value;
       const nombreOk = nombreRef.current.value;
-
-      
 
       const { user, error: signUpError } = await registrarUsuario(
         emailOk,
@@ -43,8 +39,6 @@ export default function SignUp() {
         throw insertError;
       }
 
-//      login(user);
-
       navigate("/");
 
     } catch(err) {
@@ -57,11 +51,7 @@ export default function SignUp() {
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          alt="Your Company"
-          src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-          className="mx-auto h-10 w-auto"
-        />
+        <img></img>
         <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
           Registrar usuario
         </h2>
@@ -134,13 +124,13 @@ export default function SignUp() {
                 loading ? 'bg-indigo-400' : 'bg-indigo-600'
               } px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
             >
-              {loading ? 'Creating account...' : 'Sign Up'}
+              {loading ? 'Creando cuenta...' : 'Registrate!'}
             </button>
           </div>
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">
-          Already have an account?{' '}
+          ¿Ya posees una cuenta?{' '}
            <Link to="/signin" className="font-semibold text-indigo-600 hover:text-indigo-500">
                 Ingresar al sitio
             </Link>
