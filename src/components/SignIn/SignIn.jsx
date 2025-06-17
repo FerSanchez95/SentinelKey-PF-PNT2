@@ -78,7 +78,7 @@ export default function SignIn() {
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-center">
                 <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
                   Password
                 </label>
