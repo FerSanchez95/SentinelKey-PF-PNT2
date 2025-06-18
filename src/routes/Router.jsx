@@ -29,6 +29,14 @@ export default function Router() {
           <Usuario usuario={userData}/>
         </RutaProtegida>}
       />
+      <Route 
+        path="/editar-perfil" 
+        element={
+        <RutaProtegida redirecionarA="/">
+          <Usuario usuario={userData}/>
+        </RutaProtegida>}
+      />
+
     </Routes>
     </BrowserRouter>
   );
