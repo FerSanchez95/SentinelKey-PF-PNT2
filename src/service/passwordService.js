@@ -140,3 +140,71 @@ export const getPasswordDetailsById = async (passwordId) => {
         throw error;
     }
 };
+
+export const getPasswordsDetailsByIds = async (passwordsIds) => {
+  const userId = await getAuthenticatedUserId();
+  if (!userId) {
+    throw new Error("Usuario no autenticado. Por favor, inicia sesión.");
+  }
+  const userEncryptionKey = await getUserEncryptionKey(userId);
+  try {
+    const { data, error } = await supabase
+            .from('passwords')
+            .select('password_cifrada, titulo, sitio_relacionado')
+            .in('id', passwordsIds)
+            .eq('usuario_id', userId) // Aseguramos que la contraseña pertenezca al usuario autenticado
+            .single();
+
+    const decryptedBytes = CryptoJS.AES.decrypt(data.contraseña_cifrada, userEncryptionKey);
+    const decryptedPassword = decryptedBytes.toString(CryptoJS.enc.Utf8); // Convertir a texto UTF-8
+
+    return {
+      id: passwordId,
+      password_plana: decryptedPassword,
+      titulo: data.titulo,
+      sitio_relacionado: data.sitio_relacionado
+    };
+  } catch (error) {
+    console.error('Ocurrió un error inesperado al obtener o descifrar la contraseña:', error.message);
+    throw error;
+  }
+}
+
+export const updatePasswordById = async (passwordId, newPassword) => {
+  const userId = await getAuthenticatedUserId();
+
+  if (!userId) {
+      throw new Error("Usuario no autenticado. Por favor, inicia sesión.");
+  }
+
+  const userEncryptionKey = await getUserEncryptionKey(userId);
+
+  const encryptedNewPassword = CryptoJS.AES.encrypt(newPassword, userEncryptionKey).toString();
+
+  const dataToUpdate = {
+      password_cifrada: encryptedNewPassword,
+  };
+
+  try {
+      const { data, error } = await supabase
+          .from('passwords')
+          .update(dataToUpdate)
+          .eq('id', passwordId)
+          .eq('usuario_id', userId)
+          .select();
+
+      if (error) {
+          console.error(`Error al actualizar la contraseña con ID ${passwordId}:`, error.message);
+          throw error;
+      } else if (data && data.length > 0) {
+          console.log(`Contraseña con ID ${passwordId} actualizada exitosamente:`, data);
+          return data[0];
+      } else {
+          console.warn(`No se encontró la contraseña con ID ${passwordId} para actualizar o no hubo cambios.`);
+          return null; 
+      }
+  } catch (error) {
+      console.error('Ocurrió un error inesperado al actualizar la contraseña:', error.message);
+      throw error;
+  }
+};
