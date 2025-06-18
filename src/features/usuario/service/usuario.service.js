@@ -38,7 +38,7 @@ export const cargarDatosUsuario = async ({ estaRegistrado = false, user = null }
 
     return {
       user: currentUser,  
-      message: `¡Hola ${currentUser.email}! Se cargaron tus recetas favoritas.`
+      message: `¡Hola ${currentUser.email}! Se cargaron tus passwords favoritas.`
         
     }
 }
@@ -54,11 +54,6 @@ export const obtenerDatosUsuario = async(usuarioId) => {
   try {
     const datos = await obtenerDatos(usuarioId);
     let cantidadPass = await obtenerCantidadPasswords(usuarioId);
-
-
-    if(!cantidadPass){
-      cantidadPass = 0;
-    }
 
     // console.log("Datos:", datos);
     // console.log("Contraseñas:", cantidadPass)
@@ -95,13 +90,14 @@ const obtenerDatos = async(usuarioId) => {
 }
 
 const obtenerCantidadPasswords= async(usuarioId) => {
-  const { count, error } = await supabase
-    .from("Password")
+  let { count, error } = await supabase
+    .from("passwords")
     .select("*", { count: "exact", head: true })
     .eq('usuario_id', usuarioId)
 
-  if (error) {
-    throw new Error(error.message);
+  if (error || !count) {
+    // throw new Error(error.message);
+    count = 0;
   }
 
   return count;

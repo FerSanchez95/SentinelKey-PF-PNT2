@@ -3,7 +3,6 @@ import {
   generarSaltEnBruto,
   crearSaltBase64,
 } from "../service/saltHandler.js";
-//import { cargarDatosUsuario } from '../features/usuario/service/usuario.service.js'
 import { useAuthStore } from "../stores/authStore.js";
 import { cargarDatosUsuario } from "../features/usuario/service/usuario.service.js";
 

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
-import { motion } from "framer-motion";
 import { ShieldCheck, LockKeyhole } from "lucide-react";
+import { motion } from "framer-motion";
+
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function LandingPage() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="text-center max-w-2xl mt-16"
+        className="text-center mt-16"
       >
         <h2 className="text-4xl font-extrabold mb-4 text-purple-700">
           Protegé tus contraseñas de forma simple y segura
@@ -36,17 +37,17 @@ export default function LandingPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.6 }}
-        className="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-8 text-left"
+        className="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-8 p-8"
       >
-        <div className="flex items-start gap-4">
-          <ShieldCheck className="text-purple-700 w-6 h-6 mt-1" />
+        <div className="flex items-start gap-4 m-8 text-left">
+          <ShieldCheck className="text-purple-700 w-6 h-6 mt-1"/>
           <div>
             <h3 className="font-semibold text-lg">Cifrado avanzado</h3>
             <p className="text-gray-600 text-sm">Utilizamos algoritmos como Argon2 y AES para garantizar máxima seguridad en cada acceso.</p>
           </div>
         </div>
 
-        <div className="flex items-start gap-4">
+        <div className="flex items-start gap-4 m-8 text-left">
           <LockKeyhole className="text-purple-700 w-6 h-6 mt-1" />
           <div>
             <h3 className="font-semibold text-lg">Privacidad garantizada</h3>
