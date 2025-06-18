@@ -10,10 +10,11 @@ export default function Password() {
   const [formData, setFormData] = useState({ nombre: '', valor: '' });
   const [user, setUser] = useState(null);
 
-  setUser(useAuthStore((state) => state.user));
+  setUser(useAuthStore((state) => state.user));  
 
   useEffect(() => {
     const fetchUserAndPasswords = async () => {
+    
       if (user) fetchPasswords(user.id);
     };
     fetchUserAndPasswords();

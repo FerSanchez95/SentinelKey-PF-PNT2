@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router';
 import { useAuthStore } from '../stores/authStore.js';
 import RutaProtegida from '../components/RutaProtegida/RutaProtegida.jsx'
 import Usuario from '../features/usuario/pages/Usuario.jsx'
