@@ -39,7 +39,7 @@ export default function SignUp() {
         throw insertError;
       }
 
-      navigate("/");
+      navigate("/perfil");
 
     } catch(err) {
       setError(err.message ?? 'Ocurrio un error durante el registro');

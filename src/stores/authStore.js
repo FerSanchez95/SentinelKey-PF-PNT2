@@ -1,6 +1,7 @@
 import { create } from 'zustand';
+import { persist } from "zustand/middleware";
 
-export const useAuthStore = create((set) => ({
+const dataPersist = persist((set) => ({
   user: null,
   isAuthenticated: false,
 
@@ -13,4 +14,10 @@ export const useAuthStore = create((set) => ({
     user: null,
     isAuthenticated: false,
   }),
-}));
+})
+, {
+  name: "userData",
+}
+)
+
+export const useAuthStore = create(dataPersist);
