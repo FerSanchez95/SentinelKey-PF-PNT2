@@ -21,7 +21,7 @@ export default function Router() {
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/signout" element={<SignOut />} />
-      <Route path="/testPass" element={<Password />} />
+      <Route path="/passwords" element={<Password />} />
       <Route 
         path="/perfil" 
         element={
