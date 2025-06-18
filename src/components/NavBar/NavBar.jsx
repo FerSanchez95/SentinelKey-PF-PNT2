@@ -39,8 +39,7 @@ const NavBar = () => {
   const handleSignOut = async () => {
     setLoading(true);
     try {
-      await supabase.auth.signOut();
-      navigate("/");
+      navigate("/signout");
     } catch (error) {
       console.error("Error al cerrar sesión:", error.message);
     } finally {
