@@ -1,32 +1,32 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../../auth/supabaseAuth.js';
 import { useAuthStore } from '../../../stores/authStore.js';
-import classNames from 'classnames'
+import {
+  fetchPasswordsByUserId,
+  deletePasswordsByIds,
+  updatePasswordById,
+} from '../service/password.service.js';
+import classNames from 'classnames';
 
 export default function Password() {
   const [passwords, setPasswords] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ nombre: '', valor: '' });
-  const [user, setUser] = useState(null);
 
-  setUser(useAuthStore((state) => state.user));  
+  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
-    const fetchUserAndPasswords = async () => {
-    
-      if (user) fetchPasswords(user.id);
-    };
-    fetchUserAndPasswords();
-  }, []);
+    if (user) fetchPasswords(user.id);
+  }, [user]);
 
   const fetchPasswords = async (userId) => {
-    const { data, error } = await supabase
-      .from('passwords')
-      .select('*')
-      .eq('usuario_id', userId);
-    if (error) console.error(error);
-    else setPasswords(data);
+    try {
+      const data = await fetchPasswordsByUserId(userId);
+      setPasswords(data);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   const handleSelect = (id) => {
@@ -36,12 +36,13 @@ export default function Password() {
   };
 
   const handleDeleteSelected = async () => {
-    if (selectedIds.length === 0) return;
-    const { error } = await supabase
-      .from('passwords')
-      .delete()
-      .in('id', selectedIds);
-    if (!error) fetchPasswords(user.id);
+    try {
+      await deletePasswordsByIds(selectedIds);
+      setSelectedIds([]);
+      fetchPasswords(user.id);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   const handleEdit = (password) => {
@@ -50,13 +51,12 @@ export default function Password() {
   };
 
   const handleUpdate = async () => {
-    const { error } = await supabase
-      .from('passwords')
-      .update(formData)
-      .eq('id', editingId);
-    if (!error) {
+    try {
+      await updatePasswordById(editingId, formData);
       setEditingId(null);
       fetchPasswords(user.id);
+    } catch (error) {
+      console.error(error.message);
     }
   };
 
