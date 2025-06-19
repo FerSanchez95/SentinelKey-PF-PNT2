@@ -1,9 +1,5 @@
 import CryptoJS from 'crypto-js';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { supabase } from '../auth/supabaseAuth.js';
 
 const getAuthenticatedUserId = async () => {
     const data = useAuthStore((state) => state.user);
@@ -35,6 +31,20 @@ const getUserEncryptionKey = async (userId) => {
 
     return data.userSalt;
 };
+
+export const hashPassword = async (userId, password) => {
+    const userEncryptionKey = await getUserEncryptionKey(userId);
+    const encryptedPassword = CryptoJS.AES.encrypt(password, userEncryptionKey).toString();
+    return encryptedPassword
+}
+
+export const unhashPassword = async (userId, hashPassword) => {
+    const userEncryptionKey = await getUserEncryptionKey(userId);
+    console.log(userEncryptionKey)
+    const decryptedBytes = CryptoJS.AES.decrypt(hashPassword, userEncryptionKey);
+    const decryptedPassword = decryptedBytes.toString(CryptoJS.enc.Utf8);
+    return decryptedPassword
+} 
 
 export const savePassword = async (password, title, relatedSite = null) => {
     const userId = await getAuthenticatedUserId();
@@ -72,14 +82,7 @@ export const savePassword = async (password, title, relatedSite = null) => {
     }
 };
 
-export const getPasswordsTitlesAndIds = async () => {
-    const userId = await getAuthenticatedUserId();
-
-    if (!userId) {
-        console.warn("No hay usuario autenticado. No se pueden obtener contraseñas.");
-        return [];
-    }
-
+export const getPasswordsTitlesAndIds = async (userId) => {
     try {
         const { data, error } = await supabase
             .from('passwords')

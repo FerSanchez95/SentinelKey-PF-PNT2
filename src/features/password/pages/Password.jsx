@@ -98,8 +98,8 @@ export default function Password() {
               </div>
             ) : (
               <div>
-                <h2 className="font-semibold text-lg">🔐 {pwd.nombre}</h2>
-                <p className="text-gray-700 break-words">{pwd.valor}</p>
+                <h2 className="font-semibold text-lg">🔐 {pwd.titulo}</h2>
+                <p className="text-gray-700 break-words">{pwd.password_cifrada}</p>
                 <div className="flex justify-between mt-2">
                   <button onClick={() => handleEdit(pwd)} className="text-blue-600 text-sm">Editar</button>
                   <button
