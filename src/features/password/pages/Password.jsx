@@ -1,18 +1,21 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '../../../auth/supabaseAuth.js';
-import { useAuthStore } from '../../../stores/authStore.js';
+import { useEffect, useState } from "react";
+import { supabase } from "../../../auth/supabaseAuth.js";
+import { useAuthStore } from "../../../stores/authStore.js";
 import {
   fetchPasswordsByUserId,
   deletePasswordsByIds,
   updatePasswordById,
-} from '../service/password.service.js';
-import classNames from 'classnames';
+  agregarPassword,
+} from "../service/password.service.js";
+import classNames from "classnames";
 
 export default function Password() {
   const [passwords, setPasswords] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState({ nombre: '', valor: '' });
+  const [formData, setFormData] = useState({ titulo: "", valor: "" });
+  const [showModal, setShowModal] = useState(false);
+  const [newPassword, setNewPassword] = useState({ titulo: "", valor: "", sitio_relacionado: "" });
 
   const user = useAuthStore((state) => state.user);
 
@@ -47,12 +50,12 @@ export default function Password() {
 
   const handleEdit = (password) => {
     setEditingId(password.id);
-    setFormData({ nombre: password.nombre, valor: password.valor });
+    setFormData({ titulo: password.titulo, valor: password.valor });
   };
 
   const handleUpdate = async () => {
     try {
-      await updatePasswordById(editingId, formData);
+      await updatePasswordById(userId, editingId, formData);
       setEditingId(null);
       fetchPasswords(user.id);
     } catch (error) {
@@ -60,9 +63,96 @@ export default function Password() {
     }
   };
 
+  const handleAddNewPassword = async () => {
+    if (!newPassword.titulo || !newPassword.valor) {
+      // Basic validation
+      alert("Por favor, completa el título y la contraseña.");
+      return;
+    }
+
+    try {
+      await agregarPassword(user.id, newPassword); 
+      setNewPassword({ titulo: "", valor: "", sitio_relacionado: "" }); 
+      setShowModal(false); 
+      fetchPasswords(user.id); 
+    } catch (error) {
+      console.error("Error al agregar nueva contraseña:", error.message);
+      alert("Error al guardar la contraseña. Inténtalo de nuevo.");
+    }
+  };
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Gestor de Contraseñas</h1>
+
+      <button
+        onClick={() => setShowModal(true)}
+        className="mb-4 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-500"
+      >
+        ➕ Agregar nueva contraseña
+      </button>
+
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md relative">
+            <h2 className="text-xl font-semibold mb-4">
+              Agregar nueva contraseña
+            </h2>
+
+            <input
+              type="text"
+              placeholder="Nombre del servicio (Ej: Gmail)"
+              value={newPassword.titulo}
+              onChange={(e) =>
+                setNewPassword({ ...newPassword, titulo: e.target.value })
+              }
+              className="w-full mb-3 p-2 border rounded"
+            />
+
+            <input
+              type="text"
+              placeholder="Sitio relacionado"
+              value={newPassword.sitio_relacionado}
+              onChange={(e) =>
+                setNewPassword({ ...newPassword, sitio_relacionado: e.target.value })
+              }
+              className="w-full mb-3 p-2 border rounded"
+            />
+
+            <input
+              type="text"
+              placeholder="Contraseña"
+              value={newPassword.valor}
+              onChange={(e) =>
+                setNewPassword({ ...newPassword, valor: e.target.value })
+              }
+              className="w-full mb-4 p-2 border rounded"
+            />
+
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              >
+                Cancelar
+              </button>
+              <button
+              onClick={handleAddNewPassword}
+              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-500"
+            >
+              Guardar
+            </button>
+            </div>
+
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-2 right-3 text-gray-500 hover:text-black"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       {passwords.length === 0 && <p>No hay contraseñas cargadas.</p>}
 
@@ -72,10 +162,10 @@ export default function Password() {
             key={pwd.id}
             onClick={() => handleSelect(pwd.id)}
             className={classNames(
-              'rounded-xl border p-4 shadow-md cursor-pointer hover:shadow-lg transition',
+              "rounded-xl border p-4 shadow-md cursor-pointer hover:shadow-lg transition",
               selectedIds.includes(pwd.id)
-                ? 'bg-blue-100 border-blue-500'
-                : 'bg-white'
+                ? "bg-blue-100 border-blue-500"
+                : "bg-white"
             )}
           >
             {editingId === pwd.id ? (
@@ -83,28 +173,44 @@ export default function Password() {
                 <input
                   type="text"
                   value={formData.nombre}
-                  onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, titulo: e.target.value })
+                  }
                   className="w-full mb-2 p-1 border rounded"
                 />
                 <input
                   type="text"
                   value={formData.valor}
-                  onChange={(e) => setFormData({ ...formData, valor: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, valor: e.target.value })
+                  }
                   className="w-full mb-2 p-1 border rounded"
                 />
-                <button onClick={handleUpdate} className="bg-green-600 text-white px-2 py-1 rounded">
+                <button
+                  onClick={handleUpdate}
+                  className="bg-green-600 text-white px-2 py-1 rounded"
+                >
                   Guardar
                 </button>
               </div>
             ) : (
               <div>
                 <h2 className="font-semibold text-lg">🔐 {pwd.titulo}</h2>
-                <p className="text-gray-700 break-words">{pwd.password_cifrada}</p>
+                <p className="text-gray-700 break-words">{pwd.valor}</p>
                 <div className="flex justify-between mt-2">
-                  <button onClick={() => handleEdit(pwd)} className="text-blue-600 text-sm">Editar</button>
                   <button
-                    onClick={async () => {
-                      const { error } = await supabase.from('passwords').delete().eq('id', pwd.id);
+                    onClick={() => handleEdit(pwd)}
+                    className="text-blue-600 text-sm"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={async (e) => {
+                      e.stopPropagation(); 
+                      const { error } = await supabase
+                        .from("passwords")
+                        .delete()
+                        .eq("id", pwd.id);
                       if (!error) fetchPasswords(user.id);
                     }}
                     className="text-red-600 text-sm"
@@ -128,12 +234,9 @@ export default function Password() {
           </button>
         </div>
       )}
- </div>
-);
+    </div>
+  );
 }
-
-
-
 
 // import React from 'react';
 // import ServiceCard from '../../../components/Card/Card.jsx'
@@ -148,9 +251,9 @@ export default function Password() {
 //      *      - Editadas (individualmente)
 //      *      - Eliminadas (individualmente o varias en una sola consulta)
 //      * - Las consultas deben ser hechas a partir del 'id' o el 'usuario_id' (propiedades de la tabla en SB).
-//      * - Agrupar la lógica de negocio en el servicio. 
+//      * - Agrupar la lógica de negocio en el servicio.
 //     */
-//     return (                            
+//     return (
 //         <ServiceCard serviceName={"Gmail"} serviceInfo={"this@email.com"} />
 //     );
-// } 
+// }
