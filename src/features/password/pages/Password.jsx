@@ -5,8 +5,12 @@ import {
   fetchPasswordsByUserId,
   deletePasswordsByIds,
   updatePasswordById,
+  savePassword
 } from '../service/password.service.js';
 import classNames from 'classnames';
+import Boton from '../../../components/Button/Button.jsx';
+import PasswordModal from '../../../components/PasswordModal/PasswordModal.jsx';
+
 
 export default function Password() {
   const [passwords, setPasswords] = useState([]);
@@ -14,6 +18,7 @@ export default function Password() {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ nombre: '', valor: '' });
   const [isPressing, setIsPressing] = useState(false);
+  const [isModalOpen, setOpenModal] = useState(false);
   const pressTimer = useRef(null);
   const LONG_PRESS_THRESHOLD = 1000;
 
@@ -27,6 +32,7 @@ export default function Password() {
     try {
       const data = await fetchPasswordsByUserId(userId);
       setPasswords(data);
+      // console.log("datos de constraseñas: ", data);
     } catch (error) {
       console.error(error.message);
     }
@@ -108,6 +114,10 @@ export default function Password() {
     setFormData({ nombre: password.nombre, valor: password.valor });
   };
 
+  const handleSavePassword = () =>{
+    savePassword();
+  }
+
   const handleUpdate = async () => {
     try {
       await updatePasswordById(editingId, formData);
@@ -122,14 +132,24 @@ export default function Password() {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Gestor de Contraseñas</h1>
 
+      <Boton tipo='agregar' onClick={() => {setOpenModal(true)}}>
+      Nueva contraseña  
+      </Boton>
+
+      <PasswordModal 
+      isOpen={isModalOpen} 
+      onClose={() => {setOpenModal(false)}}
+      onSave={handleSavePassword} 
+      initialData={{usuario_id: user.id}}/>
+
       {passwords.length === 0 && <p>No hay contraseñas cargadas.</p>}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {passwords.map((pwd) => (
           <div
             key={pwd.id}
-            onPointerDown={handlePointerDown(pwd.id)}
-            onPointerUp={handlePointerUp(pwd.password_cifrada)}
+            onPointerDown={() => handlePointerDown(pwd.id)}
+            onPointerUp={() => handlePointerUp(pwd.password_cifrada)}
             onPointerLeave={handlePointerLeave}
             className={classNames(
               'rounded-xl border p-4 shadow-md cursor-pointer hover:shadow-lg transition',

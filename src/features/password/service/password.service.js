@@ -1,4 +1,3 @@
-import { use } from 'react';
 import { supabase } from '../../../auth/supabaseAuth.js';
 import {
   hashPassword,
@@ -37,12 +36,15 @@ export const updatePasswordById = async (userId, id, formData) => {
   if (error) throw error;
 };
 
-export const savePassword = async (userId, password) => {
+export const savePassword = async (formData) => {
+  
+  if (!formData) throw new Error("No se pudieron cargar los datos del formulario.");
+
   const dataToInsert = {
-    usuario_id: userId,
-    password_cifrada: hashPassword(userId, password),
-    titulo: title,
-    sitio_relacionado: relatedSite,
+    usuario_id: formData.usuario_id,
+    password_cifrada: hashPassword(formData.usuario_id, formData.password),
+    titulo: formData.titulo,
+    sitio_relacionado: formData.sitio_relacionado,
   };
 
   const { error } = await supabase
