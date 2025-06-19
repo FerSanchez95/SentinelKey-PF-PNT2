@@ -12,7 +12,7 @@ export const fetchPasswordsByUserId = async (userId) => {
     .eq('usuario_id', userId);
   if (error) throw error;
   data.forEach(password => {
-    password.password = unhashPassword(userId, password.password_cifrada)
+    password.valor = unhashPassword(userId, password.password_cifrada)
   });
   console.log(data)
   return data;
@@ -27,26 +27,36 @@ export const deletePasswordsByIds = async (ids) => {
 };
 
 export const updatePasswordById = async (userId, id, formData) => {
-  if(formData.value) {
-    formData.value = hashPassword(userId, formData.value)
+  const dataToUpdate = { ...formData }; 
+  if(dataToUpdate.valor) { 
+    dataToUpdate.password_cifrada = hashPassword(userId, dataToUpdate.valor);
+    delete dataToUpdate.valor; 
   }
   const { error } = await supabase
     .from('passwords')
-    .update(formData)
+    .update(dataToUpdate) 
     .eq('id', id);
   if (error) throw error;
 };
 
-export const savePassword = async (userId, password) => {
+
+export const agregarPassword = async (userId, passwordData) => {
+  if (!passwordData || typeof passwordData.valor === 'undefined') {
+    throw new Error("no se recibio password.");
+  }
+
   const dataToInsert = {
     usuario_id: userId,
-    password_cifrada: hashPassword(userId, password),
-    titulo: title,
-    sitio_relacionado: relatedSite,
+    titulo: passwordData.titulo,
+    sitio_relacionado: passwordData.sitio_relacionado,
+    password_cifrada: hashPassword(userId, passwordData.valor),
   };
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('passwords')
-    .insert([dataToInsert]);
-    if (error) throw error;
-}
+    .insert([dataToInsert])
+    .select();
+
+  if (error) throw new Error(`Error al agregar contraseña: ${error.message}`);
+  return data[0];
+};
