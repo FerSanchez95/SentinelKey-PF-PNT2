@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../../../auth/supabaseAuth.js";
-import { useAuthStore } from "../../../stores/authStore.js";
+import { useEffect, useState, useRef } from 'react';
+import { supabase } from '../../../auth/supabaseAuth.js';
+import { useAuthStore } from '../../../stores/authStore.js';
 import {
   fetchPasswordsByUserId,
   deletePasswordsByIds,
   updatePasswordById,
-  agregarPassword,
-} from "../service/password.service.js";
-import classNames from "classnames";
+} from '../service/password.service.js';
+import classNames from 'classnames';
+import Boton from '../../../components/Button/Button.jsx';
+import PasswordModal from '../../../components/PasswordModal/PasswordModal.jsx';
+
 
 export default function Password() {
   const [passwords, setPasswords] = useState([]);
@@ -16,6 +18,9 @@ export default function Password() {
   const [formData, setFormData] = useState({ titulo: "", valor: "" });
   const [showModal, setShowModal] = useState(false);
   const [newPassword, setNewPassword] = useState({ titulo: "", valor: "", sitio_relacionado: "" });
+  const [isPressing, setIsPressing] = useState(false);
+  const pressTimer = useRef(null);
+  const LONG_PRESS_THRESHOLD = 1000;
 
   const user = useAuthStore((state) => state.user);
 
@@ -27,6 +32,7 @@ export default function Password() {
     try {
       const data = await fetchPasswordsByUserId(userId);
       setPasswords(data);
+      // console.log("datos de constraseñas: ", data);
     } catch (error) {
       console.error(error.message);
     }
@@ -36,6 +42,61 @@ export default function Password() {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
+  };
+
+
+  const handleCopyToClipboard = (passwordToCopy) => {
+
+    navigator.clipboard.writeText(passwordToCopy)
+      .then(() => {
+        alert(`¡Contraseña copiada al porta-papeles!`);
+      })
+      .catch(err => {
+        console.error('Falló la obtención de la contraseña: ', err);
+        alert('Error al copiar la información, intentelo nuevamente!');
+      });
+  }
+  
+  //Función que controla que pasa cuando se mantien presinado  
+  //el componente.
+  const handlePointerDown = (id) => {
+
+    setIsPressing(true);
+    
+    pressTimer.current = setTimeout(() => {
+      handleSelect(id); 
+      setIsPressing(false); 
+
+      if (pressTimer.current) {
+          clearTimeout(pressTimer.current);
+          pressTimer.current = null;
+      }
+    }, LONG_PRESS_THRESHOLD);
+  };
+
+  //Función que controla que pasa cuando se deja de presionar 
+  //el component
+  const handlePointerUp = (passwordObtenida) => {
+    
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current); 
+      pressTimer.current = null;
+
+      if (isPressing) {
+        handleCopyToClipboard(passwordObtenida);
+      }
+    }
+    setIsPressing(false);
+  };
+
+  //Función que controla que pasa cuando se deja de presionar 
+  //el componente moviendo le mouse fuera del área del mismo.
+  const handlePointerLeave = () => {
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+    setIsPressing(false); // Reset pressing state
   };
 
   const handleDeleteSelected = async () => {
@@ -52,6 +113,8 @@ export default function Password() {
     setEditingId(password.id);
     setFormData({ titulo: password.titulo, valor: password.valor });
   };
+
+
 
   const handleUpdate = async () => {
     try {
@@ -160,7 +223,9 @@ export default function Password() {
         {passwords.map((pwd) => (
           <div
             key={pwd.id}
-            onClick={() => handleSelect(pwd.id)}
+            onPointerDown={() => handlePointerDown(pwd.id)}
+            onPointerUp={() => handlePointerUp(pwd.password_cifrada)}
+            onPointerLeave={handlePointerLeave}
             className={classNames(
               "rounded-xl border p-4 shadow-md cursor-pointer hover:shadow-lg transition",
               selectedIds.includes(pwd.id)

@@ -1,4 +1,3 @@
-import { use } from 'react';
 import { supabase } from '../../../auth/supabaseAuth.js';
 import {
   hashPassword,
