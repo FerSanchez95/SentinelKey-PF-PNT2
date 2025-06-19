@@ -49,8 +49,10 @@ export const agregarPassword = async (userId, passwordData) => {
     usuario_id: userId,
     titulo: passwordData.titulo,
     sitio_relacionado: passwordData.sitio_relacionado,
-    password_cifrada: hashPassword(userId, passwordData.valor),
+    password_cifrada: await hashPassword(userId, passwordData.valor),
   };
+
+console.log(dataToInsert)
 
   const { data, error } = await supabase
     .from('passwords')
