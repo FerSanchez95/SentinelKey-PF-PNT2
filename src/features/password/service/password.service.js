@@ -34,7 +34,8 @@ export const updatePasswordById = async (userId, id, formData) => {
   const { error } = await supabase
     .from('passwords')
     .update(dataToUpdate) 
-    .eq('id', id);
+    .eq('id', id)
+    .eq('usuario_id', userId);
   if (error) throw error;
 };
 

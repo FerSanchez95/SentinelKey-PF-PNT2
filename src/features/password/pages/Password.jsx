@@ -5,6 +5,7 @@ import {
   fetchPasswordsByUserId,
   deletePasswordsByIds,
   updatePasswordById,
+  agregarPassword
 } from '../service/password.service.js';
 import classNames from 'classnames';
 import Boton from '../../../components/Button/Button.jsx';
@@ -118,7 +119,7 @@ export default function Password() {
 
   const handleUpdate = async () => {
     try {
-      await updatePasswordById(userId, editingId, formData);
+      await updatePasswordById(user.id, editingId, formData);
       setEditingId(null);
       fetchPasswords(user.id);
     } catch (error) {
