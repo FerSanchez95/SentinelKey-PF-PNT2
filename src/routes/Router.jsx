@@ -9,6 +9,7 @@ import SignOut from "../components/SignOut/SignOut.jsx";
 import Password from "../features/password/pages/Password.jsx";
 import LandingPage from "../components/LandingPage/LandingPage.jsx"
 import NavBar from "../components/NavBar/NavBar.jsx";
+import EditarPerfil from "../features/usuario/pages/EditarPerfil.jsx";
 
 export default function Router() {
 
@@ -22,15 +23,9 @@ export default function Router() {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/signout" element={<SignOut />} />
       <Route path="/passwords" element={<Password />} />
+      <Route path="/editar-perfil" element={<EditarPerfil usuario={userData}/>} />
       <Route 
         path="/perfil" 
-        element={
-        <RutaProtegida redirecionarA="/">
-          <Usuario usuario={userData}/>
-        </RutaProtegida>}
-      />
-      <Route 
-        path="/editar-perfil" 
         element={
         <RutaProtegida redirecionarA="/">
           <Usuario usuario={userData}/>
