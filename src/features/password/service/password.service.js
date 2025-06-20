@@ -10,12 +10,16 @@ export const fetchPasswordsByUserId = async (userId) => {
     .select('*')
     .eq('usuario_id', userId);
   if (error) throw error;
-  data.forEach(password => {
-    password.valor = unhashPassword(userId, password.password_cifrada)
-  });
-  console.log(data)
-  return data;
+
+  const processedData = await Promise.all(data.map(async (password) => {
+    password.valor = await unhashPassword(userId, password.password_cifrada);
+    return password; 
+  }));
+
+  console.log("Fetched and processed password data:", processedData);
+  return processedData;
 };
+
 
 export const deletePasswordsByIds = async (ids) => {
   const { error } = await supabase
@@ -28,7 +32,7 @@ export const deletePasswordsByIds = async (ids) => {
 export const updatePasswordById = async (userId, id, formData) => {
   const dataToUpdate = { ...formData }; 
   if(dataToUpdate.valor) { 
-    dataToUpdate.password_cifrada = hashPassword(userId, dataToUpdate.valor);
+    dataToUpdate.password_cifrada = await hashPassword(userId, dataToUpdate.valor);
     delete dataToUpdate.valor; 
   }
   const { error } = await supabase
@@ -62,3 +66,4 @@ console.log(dataToInsert)
   if (error) throw new Error(`Error al agregar contraseña: ${error.message}`);
   return data[0];
 };
+  

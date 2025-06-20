@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Boton from '../Button/Button.jsx';
-import {savePassword} from '../../features/password/service/password.service.js';
+import {agregarPassword} from '../../features/password/service/password.service.js';
 
 export default function PasswordModal({
   isOpen,
@@ -50,7 +50,7 @@ export default function PasswordModal({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-        savePassword(formData);
+        agregarPassword(formData);
       //onSave(formData);
       onClose();
     }

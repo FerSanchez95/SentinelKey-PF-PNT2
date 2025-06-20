@@ -39,10 +39,23 @@ export default function Password() {
     }
   };
 
+
+  useEffect(() => {
+  console.log("SelectedIds (actualizado):", selectedIds); // Se ejecuta después de cada actualización
+}, [selectedIds]); // Dependencia: se dispara cuando selectedIds cambia
+
+
   const handleSelect = (id) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    
+    if(!selectedIds.includes(id)){
+      setSelectedIds((prev) => [...prev, id])
+    }else {
+      selectedIds.filter((i) => i !== id);
+    }
+    
+    // setSelectedIds((prev) =>
+    //   prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    // );
   };
 
 
@@ -66,7 +79,7 @@ export default function Password() {
     
     pressTimer.current = setTimeout(() => {
       handleSelect(id); 
-      setIsPressing(false); 
+      setIsPressing(false);
 
       if (pressTimer.current) {
           clearTimeout(pressTimer.current);
@@ -224,9 +237,9 @@ export default function Password() {
         {passwords.map((pwd) => (
           <div
             key={pwd.id}
-            onPointerDown={() => handlePointerDown(pwd.id)}
-            onPointerUp={() => handlePointerUp(pwd.password_cifrada)}
-            onPointerLeave={handlePointerLeave}
+            //onPointerDown={() => handlePointerDown(pwd.id)}
+            //onPointerUp={() => handlePointerUp(pwd.password_cifrada)}
+            //onPointerLeave={handlePointerLeave}
             className={classNames(
               "rounded-xl border p-4 shadow-md cursor-pointer hover:shadow-lg transition",
               selectedIds.includes(pwd.id)
@@ -236,6 +249,7 @@ export default function Password() {
           >
             {editingId === pwd.id ? (
               <div>
+                <label>Título</label>
                 <input
                   type="text"
                   value={formData.nombre}
@@ -244,8 +258,9 @@ export default function Password() {
                   }
                   className="w-full mb-2 p-1 border rounded"
                 />
+                <label>Password</label>
                 <input
-                  type="text"
+                  type="password"
                   value={formData.valor}
                   onChange={(e) =>
                     setFormData({ ...formData, valor: e.target.value })
@@ -260,17 +275,27 @@ export default function Password() {
                 </button>
               </div>
             ) : (
-              <div>
+              <div
+              >
                 <h2 className="font-semibold text-lg">🔐 {pwd.titulo}</h2>
-                <p className="text-gray-700 break-words">{pwd.valor}</p>
                 <div className="flex justify-between mt-2">
-                  <button
-                    onClick={() => handleEdit(pwd)}
-                    className="text-blue-600 text-sm"
+                  
+                  <Boton
+                  tipo='editar'
+                  onClick={() => {handleEdit(pwd)}}
                   >
                     Editar
-                  </button>
-                  <button
+                  </Boton>
+                    
+                  <Boton
+                  onMouseDown={() => {handlePointerDown(pwd.id.valor)}}
+                  onMouseLeave={handlePointerLeave}
+                  onClick={() => {handlePointerUp(pwd.valor)}}>
+                    {selectedIds.includes(pwd.id) ? "Selecionado": "Obtener"}
+                  </Boton>
+
+                  <Boton 
+                    tipo='eliminar'
                     onClick={async (e) => {
                       e.stopPropagation(); 
                       const { error } = await supabase
@@ -282,7 +307,7 @@ export default function Password() {
                     className="text-red-600 text-sm"
                   >
                     Eliminar
-                  </button>
+                  </Boton>
                 </div>
               </div>
             )}
@@ -303,23 +328,3 @@ export default function Password() {
     </div>
   );
 }
-
-// import React from 'react';
-// import ServiceCard from '../../../components/Card/Card.jsx'
-
-// export default function Password() {
-//     /**
-//      * ¿Tiene que trarer todas las contraseñas?
-//      * - Modificar las tarjetas par que queden más presentables.
-//      * - Cada elemento 'Card' tiene que poder ser seleccionado.
-//      * - Las tarjetas deben poder selecionarse y editarse individualmente.
-//      * - Las contraseñas, como entidad, tienen que poder ser:
-//      *      - Editadas (individualmente)
-//      *      - Eliminadas (individualmente o varias en una sola consulta)
-//      * - Las consultas deben ser hechas a partir del 'id' o el 'usuario_id' (propiedades de la tabla en SB).
-//      * - Agrupar la lógica de negocio en el servicio.
-//     */
-//     return (
-//         <ServiceCard serviceName={"Gmail"} serviceInfo={"this@email.com"} />
-//     );
-// }

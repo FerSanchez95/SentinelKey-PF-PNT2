@@ -24,6 +24,9 @@ const variantes = {
 export default function Boton({
   tipo = 'default',        // 'agregar', 'eliminar', 'editar'
   onClick,
+  onMouseDown,
+  onMouseLeave,
+  onMouseUp,
   children,
   className = '',
   iconoPersonalizado = null,
@@ -34,6 +37,9 @@ export default function Boton({
   return (
     <button
       onClick={onClick}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseLeave}
       disabled={deshabilitado}
       className={clsx(
         'flex items-center px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
