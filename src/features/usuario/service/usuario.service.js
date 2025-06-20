@@ -44,6 +44,16 @@ export const cargarDatosUsuario = async ({ estaRegistrado = false, user = null }
 }
 
 
+export const actualizarUsuario = async(usuario_id, datosActualizdos) => {
+  const { error } = await supabase
+    .from('usuarios')
+    .update(datosActualizdos)
+    .eq('id', usuario_id);
+  
+  if (error) throw new Error("Ocurrió un problema al actualizar. ", error.message);
+
+}
+
 
 export const obtenerDatosUsuario = async(usuarioId) => {
 
@@ -75,7 +85,6 @@ export const obtenerDatosUsuario = async(usuarioId) => {
 }
 const obtenerDatos = async(usuarioId) => {
 
-  console.log(usuarioId)
   const { data, error } = await supabase
     .from("usuarios")
     .select("nombre, email")
