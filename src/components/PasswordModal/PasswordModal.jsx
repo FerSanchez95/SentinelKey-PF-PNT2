@@ -41,7 +41,7 @@ export default function PasswordModal({
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.título.trim()) newErrors.título = 'El título es requerido';
+    if (!formData.titulo.trim()) newErrors.título = 'El título es requerido';
     if (!formData.password.trim()) newErrors.password = 'La contraseña es requerida';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -83,7 +83,7 @@ export default function PasswordModal({
               <input
                 type="text"
                 name="título"
-                value={formData.título}
+                value={formData.titulo}
                 onChange={handleChange}
                 className={`w-full p-2 border rounded-md ${errors.título ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Ej: Correo personal"

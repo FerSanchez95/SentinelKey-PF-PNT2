@@ -3,10 +3,9 @@ import { useNavigate } from "react-router";
 import { obtenerDatosUsuario, actualizarUsuario } from "../service/usuario.service.js";
 import Boton from "../../../components/Button/Button.jsx";
 import { Home } from 'lucide-react';
-import { useAuthStore } from "../../../stores/authStore.js";
 
 
-export default function EditarPerfil(){
+export default function EditarPerfil(data){
 
     const navigate = useNavigate();
     const [error, setError] = useState(null);
@@ -14,22 +13,18 @@ export default function EditarPerfil(){
     const [cargando, setCargando] = useState(false);
     const [formData, setFormData] = useState({nombre: '', email: ''});
 
-    const data = useAuthStore((state) => state.user);
-
-    useEffect(() => {
-      cargarDatosparaActualizar();
-    },[]);
-
+    useEffect(() => {cargarDatosparaActualizar();},[])
+    
     const cargarDatosparaActualizar = async () =>{
-      
-      if (!data?.id) {
+
+      if (!data?.usuario?.id) {
         setError("Id delusuario inválido.")
         return
       }
-  
+
       try{
         setCargando(true);
-        const datosObtenidos = await obtenerDatosUsuario(data?.id);  
+        const datosObtenidos = await obtenerDatosUsuario(data?.usuario?.id);  
         if (!datosObtenidos){
           throw new Error("No se pudieron obtener los datos del usuario.");
         }
@@ -42,17 +37,25 @@ export default function EditarPerfil(){
       }
     };
     
-    const handleConfirm = async() => {
-      console.log("ID", datosUsuario.id);
-      console.log("datos: ", formData);
+    const actualizar = async() => {
       try{
-        await actualizarUsuario(datosUsuario.id, formData);
+        await actualizarUsuario(data?.usuario?.id, formData);
         navigate("/perfil");
       } catch(error){
         console.log(error.message);
         setError(error.message);
       }
-      
+    };
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      actualizar();
+      navigate("/perfil");
+    }
+
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleReturn = () => { 
@@ -77,46 +80,41 @@ export default function EditarPerfil(){
     
           {cargando ? 'Cargando datos...' : ''}
     
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md bg-white p-6 rounded-lg shadow space-y-6">
-            <div className="space-y-4 text-base text-gray-700">
-              <div className="flex justify-between items-center">
-                <span className="ml-2 flex-1 font-medium">Nombre: </span>
-                <input 
-                  type="text" 
-                  className="ml-2 flex-1 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out shadow-sm" 
-                  //placeholder={datosUsuario?.nombre || 'No Disponible'} 
-                  value={formData.nombre}
-                  onChange={(e) => 
-                    setFormData({ ...formData, nombre: e.target.value })
-                }/> 
+              <div className="space-y-4 text-base text-gray-700">
+                <div className="flex justify-between items-center">
+                  <span className="ml-2 flex-1 font-medium">Nombre: </span>
+                  <input 
+                    type="text"
+                    name="nombre" 
+                    className="ml-2 flex-1 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out shadow-sm" 
+                    //placeholder={datosUsuario?.nombre || 'No Disponible'} 
+                    value={formData.nombre}
+                    onChange={handleChange}/> 
+                </div>
+                <div className="flex justify-between">
+                  <span className="ml-2 flex-1 font-medium">Correo electrónico: </span>
+                  <input 
+                    type="email"
+                    name="email" 
+                    className="ml-2 flex-1 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out shadow-sm" 
+                    //placeholder={datosUsuario?.email || 'No Disponible'} 
+                    value={formData.email}
+                    onChange={handleChange}/> 
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="ml-2 flex-1 font-medium">Correo electrónico: </span>
-                <input 
-                  type="text" 
-                  className="ml-2 flex-1 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out shadow-sm" 
-                  //placeholder={datosUsuario?.email || 'No Disponible'} 
-                  value={formData.email}
-                  onChange={(e) => 
-                    setFormData({ ...formData, email: e.target.value })
-                }/> 
-               
+              {error && (
+                    <div className="text-red-500 text-sm">
+                      {error}
+                    </div>
+                  )}
+              <div className="flex flex-col space-y-3 gap-4">
+                <Boton type="submit" tipo="editar">Confirmar</Boton>
+                <Boton onClick={() => {handleReturn}}>Volver</Boton>
               </div>
             </div>
-            {error && (
-                  <div className="text-red-500 text-sm">
-                    {error}
-                  </div>
-                )}
-    
-            <div className="flex form-group flex-col space-y-3 gap-4">
-              <Boton onClick={handleConfirm} tipo="editar">Confirmar</Boton>
-              <Boton onClick={handleReturn}>Volver</Boton>
-            </div>
-          </div>
-        </form>
-          
+          </form>  
         </div>
       );
 }

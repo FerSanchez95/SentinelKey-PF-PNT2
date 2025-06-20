@@ -23,15 +23,18 @@ export default function Router() {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/signout" element={<SignOut />} />
       <Route path="/passwords" element={<Password />} />
-      <Route path="/editar-perfil" element={<EditarPerfil usuario={userData}/>} />
+      <Route path="/editar-perfil" element={
+        <RutaProtegida redirecionarA="/signin">
+          <EditarPerfil usuario={userData}/> 
+        </RutaProtegida>
+      }/>
       <Route 
         path="/perfil" 
         element={
-        <RutaProtegida redirecionarA="/">
+        <RutaProtegida redirecionarA="/signin">
           <Usuario usuario={userData}/>
         </RutaProtegida>}
       />
-
     </Routes>
     </BrowserRouter>
   );
