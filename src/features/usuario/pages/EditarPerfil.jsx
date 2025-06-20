@@ -39,28 +39,23 @@ export default function EditarPerfil(data){
     
           {cargando ? 'Cargando datos...' : ''}
     
-          <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md bg-white p-6 rounded-lg shadow space-y-6">
+          <form>
+            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md bg-white p-6 rounded-lg shadow space-y-6">
             <div className="space-y-4 text-base text-gray-700">
               <div className="flex justify-between items-center">
                 <span className="font-medium">Nombre: </span>
-                <input
+                <input type="text"
                   className="ml-2 flex-1 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out shadow-sm"
                   value={datosUsuario?.username || 'No disponible'}
                 />
               </div>
               <div className="flex justify-between">
                 <span className="font-medium">Correo electrónico: </span>
-                <input
+                <input type="text"
                   className="ml-2 flex-1 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out shadow-sm"
                   value={datosUsuario?.email || 'No disponible'}
                 />
-              </div>
-              <div className="flex justify-between">
-                <span className="font-medium">Contraseña: </span>
-                <input
-                  className="ml-2 flex-1 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out shadow-sm"
-                  value={datosUsuario?.password || 'No disponible'}
-                />
+               
               </div>
             </div>
             {error && (
@@ -74,6 +69,8 @@ export default function EditarPerfil(data){
               <Boton onClick={handleReturn}>Volver</Boton>
             </div>
           </div>
+        </form>
+          
         </div>
       );
 }
