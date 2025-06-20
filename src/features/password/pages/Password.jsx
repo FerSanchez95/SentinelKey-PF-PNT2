@@ -33,7 +33,7 @@ export default function Password() {
     try {
       const data = await fetchPasswordsByUserId(userId);
       setPasswords(data);
-      // console.log("datos de constraseñas: ", data);
+      console.log("datos de constraseñas: ", data);
     } catch (error) {
       console.error(error.message);
     }
@@ -46,16 +46,10 @@ export default function Password() {
 
 
   const handleSelect = (id) => {
-    
-    if(!selectedIds.includes(id)){
-      setSelectedIds((prev) => [...prev, id])
-    }else {
-      selectedIds.filter((i) => i !== id);
-    }
-    
-    // setSelectedIds((prev) =>
-    //   prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    // );
+    console.log("Id en HandlerSelect", id);
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
   };
 
 
@@ -75,6 +69,8 @@ export default function Password() {
   //el componente.
   const handlePointerDown = (id) => {
 
+    if(!id) throw new Error(`El ID proporcionado es ${id.type}`);
+
     setIsPressing(true);
     
     pressTimer.current = setTimeout(() => {
@@ -90,7 +86,7 @@ export default function Password() {
 
   //Función que controla que pasa cuando se deja de presionar 
   //el component
-  const handlePointerUp = (passwordObtenida) => {
+  const handleClick = (passwordObtenida) => {
     
     if (pressTimer.current) {
       clearTimeout(pressTimer.current); 
@@ -237,9 +233,6 @@ export default function Password() {
         {passwords.map((pwd) => (
           <div
             key={pwd.id}
-            //onPointerDown={() => handlePointerDown(pwd.id)}
-            //onPointerUp={() => handlePointerUp(pwd.password_cifrada)}
-            //onPointerLeave={handlePointerLeave}
             className={classNames(
               "rounded-xl border p-4 shadow-md cursor-pointer hover:shadow-lg transition",
               selectedIds.includes(pwd.id)
@@ -288,9 +281,16 @@ export default function Password() {
                   </Boton>
                     
                   <Boton
-                  onMouseDown={() => {handlePointerDown(pwd.id.valor)}}
-                  onMouseLeave={handlePointerLeave}
-                  onClick={() => {handlePointerUp(pwd.valor)}}>
+                  onPointerDown={() => {handlePointerDown(pwd.id)}}
+                  onPointerLeave={handlePointerLeave}
+                  //onPointerUp={() => handlePointerUp(pwd.id)}
+                  onClick={(e) => {
+                    e.preventDefault(); // Evita conflictos con el long press
+                    if (!isPressing) {  // Solo ejecuta si no fue un long press
+                    handleClick(pwd.valor);
+                    }
+                    console.log("Id suministrado: ", pwd.id);
+                  }}>
                     {selectedIds.includes(pwd.id) ? "Selecionado": "Obtener"}
                   </Boton>
 
