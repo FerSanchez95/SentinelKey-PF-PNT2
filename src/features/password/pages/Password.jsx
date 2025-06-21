@@ -286,9 +286,7 @@ export default function Password() {
                   //onPointerUp={() => handlePointerUp(pwd.id)}
                   onClick={(e) => {
                     e.preventDefault(); // Evita conflictos con el long press
-                    if (!isPressing) {  // Solo ejecuta si no fue un long press
                     handleClick(pwd.valor);
-                    }
                     console.log("Id suministrado: ", pwd.id);
                   }}>
                     {selectedIds.includes(pwd.id) ? "Selecionado": "Obtener"}
