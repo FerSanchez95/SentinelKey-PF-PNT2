@@ -21,7 +21,7 @@ export default function Password() {
   const [newPassword, setNewPassword] = useState({ titulo: "", valor: "", sitio_relacionado: "" });
   const [isPressing, setIsPressing] = useState(false);
   const pressTimer = useRef(null);
-  const LONG_PRESS_THRESHOLD = 1000;
+  const LONG_PRESS_THRESHOLD = 2000;
 
   const user = useAuthStore((state) => state.user);
 
@@ -33,20 +33,13 @@ export default function Password() {
     try {
       const data = await fetchPasswordsByUserId(userId);
       setPasswords(data);
-      console.log("datos de constraseñas: ", data);
     } catch (error) {
       console.error(error.message);
     }
   };
 
 
-  useEffect(() => {
-  console.log("SelectedIds (actualizado):", selectedIds); // Se ejecuta después de cada actualización
-}, [selectedIds]); // Dependencia: se dispara cuando selectedIds cambia
-
-
   const handleSelect = (id) => {
-    console.log("Id en HandlerSelect", id);
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
@@ -123,8 +116,6 @@ export default function Password() {
     setEditingId(password.id);
     setFormData({ titulo: password.titulo, valor: password.valor });
   };
-
-
 
   const handleUpdate = async () => {
     try {
@@ -287,7 +278,6 @@ export default function Password() {
                   onClick={(e) => {
                     e.preventDefault(); // Evita conflictos con el long press
                     handleClick(pwd.valor);
-                    console.log("Id suministrado: ", pwd.id);
                   }}>
                     {selectedIds.includes(pwd.id) ? "Selecionado": "Obtener"}
                   </Boton>

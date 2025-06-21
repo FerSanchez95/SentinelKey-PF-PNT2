@@ -15,8 +15,7 @@ export const fetchPasswordsByUserId = async (userId) => {
     password.valor = await unhashPassword(userId, password.password_cifrada);
     return password; 
   }));
-
-  console.log("Fetched and processed password data:", processedData);
+  
   return processedData;
 };
 

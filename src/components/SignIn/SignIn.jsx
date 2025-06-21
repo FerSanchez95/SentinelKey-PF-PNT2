@@ -16,8 +16,6 @@ export default function SignIn() {
 
   const handleLogin = async (e) => {
 
-    console.log(emailRef.current.value, passwordRef.current.value);
-
     e.preventDefault(); 
     setLoading(true);
     setError(null);

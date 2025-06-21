@@ -29,7 +29,6 @@ export const hashPassword = async (userId, password) => {
 
 export const unhashPassword = async (userId, hashPassword) => {
     const userEncryptionKey = await getUserEncryptionKey(userId);
-    console.log(userEncryptionKey)
     const decryptedBytes = CryptoJS.AES.decrypt(hashPassword, userEncryptionKey);
     const decryptedPassword = decryptedBytes.toString(CryptoJS.enc.Utf8);
     return decryptedPassword

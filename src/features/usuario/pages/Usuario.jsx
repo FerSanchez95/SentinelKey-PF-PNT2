@@ -37,8 +37,7 @@ export default function Usuario(data) {
     try{
       setCargando(true);
       const datosObtenidos = await obtenerDatosUsuario(data?.usuario?.id);
-      console.log(datosObtenidos);
-
+      
       if (!datosObtenidos){
         throw new Error();
       }

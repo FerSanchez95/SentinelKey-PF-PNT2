@@ -6,8 +6,6 @@ export default function RutaProtegida({ children, redirecionarA }) {
 
     const estaAutenticado = useAuthStore((state) => state.isAuthenticated);
 
-    console.log("Autenticado:", estaAutenticado);
-
 	if (!estaAutenticado) {
         return <Navigate to={redirecionarA} />;
     }
