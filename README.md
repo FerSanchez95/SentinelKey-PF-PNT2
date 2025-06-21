@@ -21,13 +21,13 @@
   - [👀 Observaciones](#-observaciones)
   - [🔐 Seguridad](#-seguridad)
   - [🔧 Configuración clave](#-configuración-clave)
-- [🛫 Despliegue del proyecto](#-despliegue-del-proyecto)
-  - [💻 Ejecución Local (PWA)](#-ejecución-local-pwa)
-  - [🌐 Nelify](#-nelify)
 - [⚙️ Cómo utilizar el proyecto](#️-cómo-utilizar-el-proyecto)
   - [🔐 Plantilla de archivos `.env`](#-plantilla-de-archivos-env)
   - [🌿 Ramas del proyecto](#-ramas-del-proyecto)
   - [🚀 Correr la aplicación](#-correr-la-aplicación)
+- [🛫 Despliegue del proyecto](#-despliegue-del-proyecto)
+  - [💻 Ejecución Local (PWA)](#-ejecución-local-pwa)
+  - [🌐 Nelify](#-nelify)
 - [📜 Licencia](#-licencia)
 ---
 
