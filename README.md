@@ -13,6 +13,7 @@
 - [👥 Integrantes](#-integrantes)
 - [📄 Desarrollo](#-desarrollo)
   - [💡 Desarrollo](#integrantes)
+  - [✨ Características Principales](#-características-principales)
   - [🔗 Enlaces útiles](#enlaces-útiles)
 - [🗃️ Uso de la base de datos](#️-uso-de-la-base-de-datos)
   - [🗂 Estructura de la Base de Datos](#-estructura-de-la-base-de-datos)
@@ -21,6 +22,8 @@
   - [🔐 Seguridad](#-seguridad)
   - [🔧 Configuración clave](#-configuración-clave)
 - [🛫 Despliegue del proyecto](#-despliegue-del-proyecto)
+  - [💻 Ejecución Local (PWA)](#-ejecución-local-pwa)
+  - [🌐 Nelify](#-nelify)
 - [⚙️ Cómo utilizar el proyecto](#️-cómo-utilizar-el-proyecto)
   - [🔐 Plantilla de archivos `.env`](#-plantilla-de-archivos-env)
   - [🌿 Ramas del proyecto](#-ramas-del-proyecto)
@@ -51,6 +54,12 @@ Este proyecto fue desarrollado con las siguientes tecnologías:
 - [Tailwind CSS](https://tailwindcss.com/) para estilos
 - [Supabase](https://supabase.com/) como ppoveedor de BD y lógica backend
 - [Netlify](https://www.netlify.com/) como Host y proveedor de servicios de despliegue
+
+### ✨ Características Principales
+- **Cifrado Robusto**: Utiliza algoritmos de cifrado de última generación basados en [Crypto-js](https://www.npmjs.com/package/crypto-js) para proteger tus datos sensibles.
+- **Almacenamiento Centralizado**: Guarda todas tus contraseñas en un base de datos de forma segura.
+- **Interfaz de Usuario Intuitiva**: Fácil de usar para gestionar tus credenciales sin complicaciones.
+- **Seguridad de Acceso**: Solo tú puedes acceder a las contresñas guardadas.
 
 ### 🗂️ Estructura del proyecto
 
@@ -169,15 +178,6 @@ CREATE TABLE public.passwords (
 
 ---
 
-## 🛫 Despliegue (Deployment)
-
-La aplicación está desplegada en [Netlify](https://www.netlify.com/), que ofrece:
-
-- **Despliegue continuo:** Cada `push` a la rama `main` actualiza automáticamente la versión en producción.  
-- Escalabilidad y CDN integrado  
-
-**🔗 Enlace de producción:** [SentinelKey](https://sentinelkey.netlify.app/)  
-
 ## ⚙️ Cómo utilizar el proyecto
 
 ### 🔐 Plantilla de archivos `.env`
@@ -215,6 +215,48 @@ npm install
 ```bash
 npm run dev
 ```
+
+---
+
+## 🛫 Despliegue (Deployment)
+
+### 💻 Ejecución Local (PWA)
+
+En la rama de desarrollo (`develop`), la aplicación está configurada para funcionar como una Progressive Web Application (PWA). Una vez compilado el proyecto y ejecutado su "preview", podrás acceder a SentinelKey directamente desde tu navegador local con funcionalidades de PWA (como instalación en el escritorio).
+
+Para ejecutar y previsualizar la aplicación localmente, sigue estos pasos:
+
+> 🔍 **Nota**: Recuerda realizar los pasos de instalación previos. [🚀 Correr la aplicación](#-correr-la-aplicación) 
+
+**Compilar el proyecto**:
+```bash
+  npm run build
+```
+Este comando ejecutará el script `vite build`, generando los archivos optimizados de tu aplicación.
+
+**Iniciar la previsualización:**
+
+```bash
+  npm run preview
+```
+Este comando ejecutará el script `vite preview`, sirviendo la aplicación compilada en tu **localhost**.
+
+También puedes ejecutar ambos comandos de forma secuencial con una sola línea:
+
+```bash
+  npm run build && npm run preview
+```
+
+Una vez que la previsualización esté en marcha, abre el enlace proporcionado al **localhost** en tu navegador para acceder a la aplicación con todas sus funcionalidades PWA.
+
+### 🌐 Nelify
+
+La aplicación está desplegada en [Netlify](https://www.netlify.com/), que ofrece:
+
+- **Despliegue continuo:** Cada `push` a la rama `main` actualiza automáticamente la versión en producción.  
+- Escalabilidad y CDN integrado  
+
+**🔗 Enlace de producción:** [SentinelKey](https://sentinelkey.netlify.app/)  
 
 ---
 
