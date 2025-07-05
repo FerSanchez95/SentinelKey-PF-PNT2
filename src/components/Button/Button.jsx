@@ -1,22 +1,26 @@
 import React from 'react';
 import { clsx } from 'clsx';
-import { Pencil, Trash2, Plus, Home } from 'lucide-react'; // Iconos opcionales
+import { Pencil, Trash2, Plus, Home, LogOut } from 'lucide-react'; // Iconos opcionales
 
 const variantes = {
   agregar: {
-    estilo: 'bg-green-600 hover:bg-green-700 text-white',
+    estilo: 'bg-green-600 justify-center hover:bg-green-700 text-white',
     icono: <Plus className="w-4 h-4 mr-2" />,
   },
   eliminar: {
-    estilo: 'bg-red-600 hover:bg-red-700 text-white',
+    estilo: 'bg-red-600 justify-center hover:bg-red-700 text-white',
     icono: <Trash2 className="w-4 h-4 mr-2" />,
   },
   editar: {
-    estilo: 'bg-blue-600 hover:bg-blue-700 text-white',
+    estilo: 'bg-blue-600 justify-center hover:bg-blue-700 text-white',
     icono: <Pencil className="w-4 h-4 mr-2" />,
   },
+  cerrarSesion: {
+    estilo: 'bg-red-600 justify-center hover:bg-red-700 text-white',
+    icono: <LogOut className="w-4 h-4 mr-2" />,
+  },
   default: {
-    estilo: 'bg-gray-300 hover:bg-gray-400 text-black',
+    estilo: 'bg-gray-300 justify-center hover:bg-gray-400 text-black',
     icono: null,
   },
 };

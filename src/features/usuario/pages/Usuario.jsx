@@ -108,12 +108,7 @@ export default function Usuario(data) {
 
         <div className="flex flex-col space-y-3 gap-4">
           <Boton tipo="editar" onClick={handleEditProfile}>Editar Perfil</Boton>
-          <button
-            onClick={handleSingOut}
-            className="w-full rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400"
-          >
-            Cerrar sesión
-          </button>
+          <Boton tipo="cerrarSesion" onClick={handleSingOut}>Cerrar Sesion</Boton>
           <Boton onClick={handleGoHome} iconoPersonalizado={<Home className="w-4 h-4 mr-2" />}> Volver</Boton>
         </div>
       </div>
