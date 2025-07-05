@@ -54,7 +54,7 @@ const NavBar = () => {
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="flex items-center">
-                <span className="text-white font-bold">SentinelKey</span>
+                <button className="text-white font-bold" onClick={() => {navigate("/")}}>SentinelKey</button>
               </div>
 
               <div className="hidden sm:block sm:ml-6">
