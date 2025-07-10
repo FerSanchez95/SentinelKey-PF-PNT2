@@ -24,8 +24,7 @@ export default function Usuario(data) {
    // Manejador para cerrar sesión.
   const handleSingOut = () => {
     navigate("/signout");
-  }
-
+  };
 
   const cargaDeDatos = async() =>{
 
@@ -33,7 +32,6 @@ export default function Usuario(data) {
       setError("Id delusuario inválido.")
       return
     }
-
     try{
       setCargando(true);
       const datosObtenidos = await obtenerDatosUsuario(data?.usuario?.id);
@@ -41,6 +39,7 @@ export default function Usuario(data) {
       if (!datosObtenidos){
         throw new Error();
       }
+      console.log("Datos obtenidos: ", datosObtenidos);
       setDatosUsuario(datosObtenidos);
     } catch (er) {
       console.log(er.message);
