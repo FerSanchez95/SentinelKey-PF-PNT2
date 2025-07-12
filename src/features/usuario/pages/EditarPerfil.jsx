@@ -2,6 +2,7 @@ import React, { useEffect, useState} from "react";
 import { useNavigate } from "react-router";
 import { obtenerDatosUsuario, actualizarUsuario } from "../service/usuario.service.js";
 import Boton from "../../../components/Button/Button.jsx";
+import Tag from "../../../components/Tag/Tag.jsx";
 import { Home } from 'lucide-react';
 
 
@@ -9,6 +10,7 @@ export default function EditarPerfil(data){
 
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    const [actualizacionRealizada, setActualizacionRealizada] = useState(null);
     const [cargando, setCargando] = useState(false);
     const [formData, setFormData] = useState({nombre: '', email: ''});
 
@@ -41,21 +43,26 @@ export default function EditarPerfil(data){
 
     const actualizar = async() => {
       try{
-        await actualizarUsuario(data?.usuario?.id, formData);
-        navigate("/perfil");
+          await actualizarUsuario(data?.usuario?.id, formData);
+          setActualizacionRealizada("¡Actualización exitosa! Volviendo al perfil.")
+        
       } catch(error){
         console.log(error.message);
         setError(error.message);
       }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
       e.preventDefault();
       try {
         if(!formData){
           throw new Error("Debe ingresar correctamente los campos solicitados")
         }
         actualizar();
+        // Temporizador para ver mensaje de operación exitosa
+        await new Promise(resolve => {
+            setTimeout(resolve, 2000);
+          })
         navigate("/perfil");
       }catch(error){
         console.log(error.message);
@@ -92,7 +99,12 @@ export default function EditarPerfil(data){
           </div>
     
           {cargando ? 'Cargando datos...' : ''}
-    
+          {actualizacionRealizada && (
+                    <Tag  type="success">{actualizacionRealizada}</Tag>
+                  )}
+          {error && (
+                    <Tag  type="error">{error}</Tag>
+                  )}                  
           
           <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md bg-white p-6 rounded-lg shadow space-y-6">
             <form >
@@ -118,11 +130,6 @@ export default function EditarPerfil(data){
                     autoComplete="on"/>
                 </div>
               </div>
-              {error && (
-                    <div className="text-red-500 text-sm">
-                      {error}
-                    </div>
-                  )}
               <div className="flex flex-col space-y-3 mt-6 gap-4">
                 <Boton type="submit" onClick={handleSubmit} tipo="editar">Confirmar</Boton>
               </div>
