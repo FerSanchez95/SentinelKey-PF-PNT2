@@ -61,7 +61,7 @@ export default function EditarPerfil(data){
         actualizar();
         // Temporizador para ver mensaje de operación exitosa
         await new Promise(resolve => {
-            setTimeout(resolve, 2000);
+            setTimeout(resolve, 3000);
           })
         navigate("/perfil");
       }catch(error){

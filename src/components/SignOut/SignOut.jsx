@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { signOut } from '../../auth/auth.service';
 import { useAuthStore } from '../../stores/authStore.js';
-import Boton from '../Button/Button.jsx';
 import Modal from '../Modal/Modal.jsx';
 
 export default function SignOut() {
@@ -25,11 +24,15 @@ export default function SignOut() {
   };
 
   const abrirModal = () => setModalAbierto(true);
-  const cerrarModal = () => setModalAbierto(false);
+  const cerrarModal = () => {
+    setModalAbierto(false);
+    navigate(-1);
+  };
 
   const confirmarAccion = () => {
     handleSignOut();
     cerrarModal();
+    navigate("/");
   };
 
   useEffect(()=>{abrirModal();}, [])
