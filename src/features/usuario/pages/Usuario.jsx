@@ -26,31 +26,33 @@ export default function Usuario(data) {
     navigate("/signout");
   };
 
-  const cargaDeDatos = async() =>{
-
-    if (!data?.usuario?.id) {
-      setError("Id delusuario inválido.")
-      return
-    }
-    try{
-      setCargando(true);
-      const datosObtenidos = await obtenerDatosUsuario(data?.usuario?.id);
-      
-      if (!datosObtenidos){
-        throw new Error();
-      }
-      console.log("Datos obtenidos: ", datosObtenidos);
-      setDatosUsuario(datosObtenidos);
-    } catch (er) {
-      console.log(er.message);
-      setError(er.message ?? "No se pudieron obtener los datos del usurio.")
-    } finally {
-      setCargando(false);
-    }
-  };
 
   useEffect(() => {
+
+    const cargaDeDatos = async() => {
+
+      if (!data?.usuario?.id) {
+        setError("Id delusuario inválido.")
+        return
+      }
+      try{
+        setCargando(true);
+        const datosObtenidos = await obtenerDatosUsuario(data?.usuario?.id);
+        
+        if (!datosObtenidos){
+          throw new Error();
+        }
+        setDatosUsuario(datosObtenidos);
+      } catch (er) {
+        console.log(er.message);
+        setError(er.message ?? "No se pudieron obtener los datos del usurio.")
+      } finally {
+        setCargando(false);
+      }
+    };
+
     cargaDeDatos();
+
   },[]); //<- ESLint te sugiere sacar el array de dependencias vacío... No lo hagas, se rompe todo :)
 
 
