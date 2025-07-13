@@ -41,7 +41,6 @@ export default function PasswordModal({
 
   const validate = () => {
     const newErrors = {};
-    console.log(formData)
     if (!formData.titulo || formData.titulo.trim() === "") newErrors.titulo = 'El titulo es requerido';
     if (!formData.password || formData.password.trim() === "") newErrors.password = 'La contraseña es requerida';
     setErrors(newErrors);
@@ -62,7 +61,7 @@ export default function PasswordModal({
   const agregarContraseña = async() =>{
       try {
         await agregarPassword(formData); 
-        setFormData({ titulo: "", valor: "", sitio_relacionado: "" }); 
+        setFormData({ titulo: "", sitio_relacionado: "", password: ''}); 
         onClose();
       } catch (error) {
         console.error("Error al agregar nueva contraseña:", error.message);
@@ -96,7 +95,7 @@ export default function PasswordModal({
           {edicion ? 'Editar contraseña' : 'Agregar nueva contraseña'}
         </h2>
         
-        <form>
+        <form onSubmit={handleSubmit}>
 
           <input type="hidden" name="usuario_id" value={formData.usuario_id} />
 
@@ -145,10 +144,10 @@ export default function PasswordModal({
 
           {/* Botones */}
           <div className="flex justify-end gap-3 mt-6">
-            <Boton tipo="default" onClick={onClose}>
+            <Boton tipo="default" type="button" onClick={onClose}>
               Cancelar
             </Boton>
-            <Boton tipo="guardar" type="submit" onClick={handleSubmit}>
+            <Boton tipo="guardar" type="submit">
               {edicion ? 'Guardar cambios' : 'Agregar'}
             </Boton>
           </div>

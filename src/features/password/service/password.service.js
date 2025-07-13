@@ -22,6 +22,14 @@ export const fetchPasswordsByUserId = async (userId) => {
   return processedData;
 };
 
+export const deletePasswordById = async(id) => {
+  const { error } = await supabase
+                          .from("passwords")
+                          .delete()
+                          .eq("id", id);
+  if (error) throw error;
+                      
+}
 
 export const deletePasswordsByIds = async (ids) => {
   const { error } = await supabase
@@ -59,8 +67,6 @@ export const agregarPassword = async(passwordData) => {
     sitio_relacionado: passwordData.sitio_relacionado,
     password_cifrada: await hashPassword(passwordData.usuario_id, passwordData.password),
   };
-
-console.log(dataToInsert)
 
   const { data, error } = await supabase
     .from('passwords')

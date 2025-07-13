@@ -1,20 +1,22 @@
 import { useEffect, useState, useRef } from 'react';
-import { supabase } from '../../../auth/supabaseAuth.js';
 import { useAuthStore } from '../../../stores/authStore.js';
 import {
   fetchPasswordsByUserId,
+  deletePasswordById,
   deletePasswordsByIds,
 } from '../service/password.service.js';
 import classNames from 'classnames';
 import Boton from '../../../components/Button/Button.jsx';
+import Tag from '../../../components/Tag/Tag.jsx';
 import PasswordModal from '../components/PasswordModal.jsx';
 
 
 export default function Password() {
-  const [passwords, setPasswords] = useState([]); //almacena las contraseñas del usuario
+  const [passwords, setPasswords] = useState([]); //Almacena las contraseñas del usuario
   const [selectedIds, setSelectedIds] = useState([]); //lista de paswordId seleccionados.
   const [editingId, setEditingId] = useState(null); //Id de password a editar
-  //const [formData, setFormData] = useState({ titulo: "", valor: "" }); //datos de un fomulario de edicion
+  const [error, setError] = useState(null);
+  const [eliminacion, setEliminacion] = useState(null);
   const [showModal, setShowModal] = useState(false); //abre o cierra el modal
   const [isPressing, setIsPressing] = useState(false); //para saber si uno de los botones está presionado.
   const pressTimer = useRef(null);
@@ -99,6 +101,19 @@ export default function Password() {
     setIsPressing(false); // Reset pressing state
   };
 
+
+  const handleDelete = async(id) => {
+    try {
+      await deletePasswordById(id);
+      setEliminacion(true);
+      fetchPasswords(user.id);
+      await timeOut(2000);
+      setEliminacion(false);      
+    } catch(error){
+      console.log("Error al eliminar la constraseña: ", error.message);
+      setError("Ocurrió un error al intentar eliminar la constraseña. Intentelo nuevamente.")
+    }
+  }
   const handleDeleteSelected = async () => {
     try {
       await deletePasswordsByIds(selectedIds);
@@ -121,16 +136,11 @@ export default function Password() {
     fetchPasswords(user.id);
   }
 
-  // const handleUpdate = async () => {
-  //   try {
-  //     await updatePasswordById(user.id, editingId, formData);
-  //     setEditingId(null);
-  //     fetchPasswords(user.id);
-  //   } catch (error) {
-  //     console.error(error.message);
-  //   }
-  // };
-
+  const timeOut = async(delay) =>{
+    await new Promise( resolve => {
+      setTimeout(resolve, delay)
+    })
+  }
 
   return (
     <div className="p-4">
@@ -142,6 +152,8 @@ export default function Password() {
       >
         ➕ Agregar nueva contraseña
       </button>
+
+      {error && <Tag type='error'>{error}</Tag>}
 
       <PasswordModal 
         isOpen={showModal} 
@@ -169,8 +181,8 @@ export default function Password() {
                 edicion={true}
                 datosIniciales={{usuario_id: user.id, id: editingId}}
               />
-            ) : (
-              <div>
+            ) : ( !eliminacion ? 
+              (<div>
                 <h2 className="font-semibold text-lg">🔐 {pwd.titulo}</h2>
                 <div className="flex justify-between mt-2">
                   
@@ -194,20 +206,16 @@ export default function Password() {
 
                   <Boton 
                     tipo='eliminar'
-                    onClick={async (e) => {
-                      e.stopPropagation(); 
-                      const { error } = await supabase
-                        .from("passwords")
-                        .delete()
-                        .eq("id", pwd.id);
-                      if (!error) fetchPasswords(user.id);
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(pwd.id);
                     }}
                     className="text-red-600 text-sm"
                   >
                     Eliminar
                   </Boton>
                 </div>
-              </div>
+              </div>) : ( <Tag type='error'>Eliminando</Tag>)
             )}
           </div>
         ))}
