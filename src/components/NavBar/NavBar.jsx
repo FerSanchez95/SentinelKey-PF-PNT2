@@ -60,27 +60,27 @@ const NavBar = () => {
               <div className="hidden sm:block sm:ml-6">
                 <div className="flex space-x-4">
                   <NavLink to="/passwords" className={({ isActive }) => classNames(
-                    isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                    isActive ? 'bg-gray-900 text-white border-b-4 border-transparent hover:border-b-indigo-500' : 'text-gray-300 border-b-4 border-transparent  hover:bg-gray-700 hover:text-white  hover:border-b-indigo-500',
                     'rounded-md px-3 py-2 text-sm font-medium'
                   )}>
-                    Passwords
+                    Bóveda
                   </NavLink>
 
                   {user ? (
                     <>
                       <NavLink to="/perfil" className={({ isActive }) => classNames(
-                        isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        isActive ? 'bg-gray-900 text-white border-b-4 border-transparent hover:border-b-indigo-500' : 'text-gray-300 border-b-4 border-transparent  hover:bg-gray-700 hover:text-white  hover:border-b-indigo-500',
                         'rounded-md px-3 py-2 text-sm font-medium'
                       )}>
-                        Profile
+                        Perfil
                       </NavLink>
 
                       <button
                         onClick={handleSignOut}
                         disabled={loading}
-                        className="rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-500"
+                        className="text-center justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-500"
                       >
-                        Sign Out
+                        Cerrar sesión
                       </button>
                     </>
                   ) : (
@@ -89,13 +89,13 @@ const NavBar = () => {
                         isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                         'rounded-md px-3 py-2 text-sm font-medium'
                       )}>
-                        Sign In
+                        Ingresar
                       </NavLink>
                       <NavLink to="/signup" className={({ isActive }) => classNames(
                         isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                         'rounded-md px-3 py-2 text-sm font-medium'
                       )}>
-                        Sign Up
+                        Registrarse
                       </NavLink>
                     </>
                   )}
@@ -105,7 +105,7 @@ const NavBar = () => {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {user && (
                   <span className="text-gray-300 mr-4 hidden sm:inline">
-                    👤 {renderEmailUser(user)}
+                    🟢 {renderEmailUser(user)}
                   </span>
                 )}
 
@@ -122,30 +122,30 @@ const NavBar = () => {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3">
-              <NavLink to="/" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                Passwords
+              <NavLink to="/passwords" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+                Bóveda
               </NavLink>
 
               {user ? (
                 <>
                   <NavLink to="/perfil" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                    Profile
+                    Perfil
                   </NavLink>
                   <button
                     onClick={handleSignOut}
                     disabled={loading}
-                    className="block w-full text-left rounded-md px-3 py-2 text-base font-medium bg-red-600 text-white hover:bg-red-500"
+                    className="block w-full text-center rounded-md px-3 py-2 text-base font-medium bg-red-600 text-white hover:bg-red-500"
                   >
-                    {loading ? 'Cerrando...' : 'Sign Out'}
+                    {loading ? 'Cerrando...' : 'Cerrar sesión'}
                   </button>
                 </>
               ) : (
                 <>
                   <NavLink to="/signin" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                    Sign In
+                    Ingresar
                   </NavLink>
                   <NavLink to="/signup" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                    Sign Up
+                    Registrarse
                   </NavLink>
                 </>
               )}

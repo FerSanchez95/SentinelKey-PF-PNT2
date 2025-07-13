@@ -120,7 +120,7 @@ export default function EditarPerfil(data){
                     autoComplete="on"/> 
                 </div>
                 <div className="flex justify-between">
-                  <span className="ml-2 flex-1 font-medium">Correo electrónico: </span>
+                  <span className="ml-2 flex-1 font-medium">Correo: </span>
                   <input 
                     type="email"
                     name="email" 

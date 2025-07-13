@@ -93,7 +93,7 @@ export default function Usuario(data) {
             <span>{datosUsuario?.nombre}</span>
           </div>
           <div className="flex justify-between">
-            <span className="font-medium">Correo electrónico: </span>
+            <span className="font-medium">Correo: </span>
             <span>{datosUsuario?.email}</span>
           </div>
           <div className="flex justify-between">
