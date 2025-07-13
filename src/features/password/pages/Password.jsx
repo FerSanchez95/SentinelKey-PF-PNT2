@@ -144,23 +144,29 @@ export default function Password() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Gestor de Contraseñas</h1>
 
-      <button
-        onClick={() => setShowModal(true)}
-        className="mb-4 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-500"
-      >
-        ➕ Agregar nueva contraseña
-      </button>
+      <div className="mb-4">
+        <h1 className="text-3xl font-bold text-purple-700 tracking-tight">Tu Bóveda de Contraseñas Segura</h1>
+        <p className="text-sm text-gray-500">Almacena, protege y gestiona tus claves fácilmente</p>
+      </div>
+
+      <div className='flex justify-center'>
+        <Boton tipo='agregar' onClick={() => setShowModal(true)}>
+          Agregar nueva contraseña
+        </Boton>
+      </div>
 
       {error && <Tag type='error'>{error}</Tag>}
 
       <PasswordModal 
         isOpen={showModal} 
         onClose={handleModalClose}
-        datosIniciales={{usuario_id: user.id}}/>
+        datosIniciales={{usuario_id: user.id}}
+      />
 
-      {passwords.length === 0 && <p>No hay contraseñas cargadas.</p>}
+      <div className='flex mt-5 mb-3 justify-center'>
+        {passwords.length === 0 && <Tag type='info'>No hay contraseñas almacenadas actualmente</Tag>}
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {passwords.map((pwd) => (
@@ -194,14 +200,13 @@ export default function Password() {
                   </Boton>
                     
                   <Boton
-                  onPointerDown={() => {handlePointerDown(pwd.id)}}
-                  onPointerLeave={handlePointerLeave}
-                  //onPointerUp={() => handlePointerUp(pwd.id)}
-                  onClick={(e) => {
-                    e.preventDefault(); // Evita conflictos con el long press
-                    handleClick(pwd.valor);
-                  }}>
-                    {selectedIds.includes(pwd.id) ? "Selecionado": "Obtener"}
+                    onPointerDown={() => {handlePointerDown(pwd.id)}}
+                    onPointerLeave={handlePointerLeave}
+                    onClick={(e) => {
+                      e.preventDefault(); // Evita conflictos con el long press
+                      handleClick(pwd.valor);
+                    }}>
+                      {selectedIds.includes(pwd.id) ? "Selecionado": "Obtener"}
                   </Boton>
 
                   <Boton 
@@ -215,7 +220,7 @@ export default function Password() {
                     Eliminar
                   </Boton>
                 </div>
-              </div>) : ( <Tag type='error'>Eliminando</Tag>)
+              </div>) : (<Tag type='error'>Eliminando</Tag>)
             )}
           </div>
         ))}

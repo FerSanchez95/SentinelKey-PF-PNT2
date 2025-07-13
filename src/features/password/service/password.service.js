@@ -41,7 +41,6 @@ export const deletePasswordsByIds = async (ids) => {
 
 export const updatePasswordById = async (id, formData) => {
   console.log(id);
-  console.log(formData)
   const dataToUpdate = { ...formData }; 
   if(dataToUpdate.password) { 
     dataToUpdate.password_cifrada = await hashPassword(dataToUpdate.usuario_id, dataToUpdate.password);
