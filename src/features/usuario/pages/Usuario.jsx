@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { obtenerDatosUsuario } from "../service/usuario.service.js";
 import Boton from "../../../components/Button/Button.jsx";
+import Tag from '../../../components/Tag/Tag.jsx';
 import { Home } from 'lucide-react';
 
 export default function Usuario(data) {
@@ -56,16 +57,28 @@ export default function Usuario(data) {
   },[]); //<- ESLint te sugiere sacar el array de dependencias vacío... No lo hagas, se rompe todo :)
 
 
-    if (cargando) {
-    return <p>Cargando datos...</p>;
+  if (cargando) {
+    return (
+      <div className="flex justify-center mt-8 mb-4">
+        <Tag type='info'>Cargando datos...</Tag>
+      </div>
+    );
   }
 
   if (error) {
-    return <p className="text-red-500">{error}</p>;
+    return (
+      <div className="flex justify-center mt-8 mb-4">
+        <Tag type='error'>{error}</Tag>
+      </div>
+    );
   }
 
   if (!datosUsuario) {
-    return <p>No se encontraron datos del usuario.</p>;
+    return (
+      <div className="flex justify-center mt-8 mb-4">
+        <Tag type='warning'>No se encontraron datos del usuario</Tag>
+      </div>
+    );
   }
 
   return (
@@ -78,13 +91,13 @@ export default function Usuario(data) {
           )}&background=4f46e5&color=fff`}
           alt={`Avatar de ${datosUsuario?.nombre}`}
         />
-        <h2 className="mt-4 text-2xl font-bold tracking-tight text-gray-900">
+        <h2 className="mt-4 mb-2 text-3xl font-bold tracking-tight text-gray-900">
           {datosUsuario?.nombre}
         </h2>
-        <p className="mt-1 text-sm text-gray-600">Información de tu cuenta</p>
+        <Tag type="info">Información de tu cuenta</Tag>
       </div>
 
-      {cargando ? 'Cargando datos...' : ''}
+      {cargando && <Tag type='info'>Cargando datos...</Tag> }
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md bg-white p-6 rounded-lg shadow space-y-6">
         <div className="space-y-4 text-base text-gray-700">
