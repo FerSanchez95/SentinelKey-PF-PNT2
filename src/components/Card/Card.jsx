@@ -4,11 +4,11 @@ const ServiceCard = ({ serviceName, serviceInfo }) => {
   const handleCardClick = () => {
     navigator.clipboard.writeText(serviceInfo)
       .then(() => {
-        alert(`Information for "${serviceName}" copied to clipboard!`);
+        alert(`La contraseña de "${serviceName}" se copió al porta-papeles!`);
       })
       .catch(err => {
-        console.error('Failed to copy text: ', err);
-        alert('Failed to copy information. Please try again.');
+        console.error('Ocurrió un error: ', err);
+        alert('No se pudo compiar la contraseña. Por favor vuelva a intentarlo.');
       });
   };
 

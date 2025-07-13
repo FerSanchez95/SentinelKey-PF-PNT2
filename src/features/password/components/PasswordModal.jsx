@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import Boton from '../Button/Button.jsx';
-import {agregarPassword} from '../../features/password/service/password.service.js';
+import Boton from '../../../components/Button/Button.jsx';
+import {agregarPassword, updatePasswordById} from '../service/password.service.js';
 
 export default function PasswordModal({
   isOpen,
   onClose,
-  //onSave, // Función que recibe los datos del formulario: { usuario_id, título, sitio_relacionado, password }
-  initialData = {}, // Para modo edición (opcional)
+  edicion,
+  datosIniciales = {}, // Puede recibir el Id del asuario como el Id de la password a editar.
 }) {
   const dialogRef = useRef();
   const [formData, setFormData] = useState({
-    usuario_id: initialData.usuario_id,
+    usuario_id: datosIniciales.usuario_id,
     titulo: '',
     sitio_relacionado: '',
     password: '',
@@ -20,10 +20,10 @@ export default function PasswordModal({
 
   // Inicializar datos si estamos en modo edición
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
+    if (datosIniciales) {
+      setFormData(datosIniciales);
     }
-  }, [initialData]);
+  }, []);
 
   // Cerrar con ESC o clic fuera
   useEffect(() => {
@@ -41,20 +41,44 @@ export default function PasswordModal({
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.titulo.trim()) newErrors.título = 'El título es requerido';
-    if (!formData.password.trim()) newErrors.password = 'La contraseña es requerida';
+    console.log(formData)
+    if (!formData.titulo || formData.titulo.trim() === "") newErrors.titulo = 'El titulo es requerido';
+    if (!formData.password || formData.password.trim() === "") newErrors.password = 'La contraseña es requerida';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     if (validate()) {
-        agregarPassword(formData);
-      //onSave(formData);
-      onClose();
+      if (edicion && datosIniciales.id !== undefined){
+        await actualizarPassword();
+      } else {
+        await agregarContraseña();
+      }  
     }
   };
+
+  const agregarContraseña = async() =>{
+      try {
+        await agregarPassword(formData); 
+        setFormData({ titulo: "", valor: "", sitio_relacionado: "" }); 
+        onClose();
+      } catch (error) {
+        console.error("Error al agregar nueva contraseña:", error.message);
+        alert("Error al guardar la contraseña. Inténtalo de nuevo.");
+      };
+  }
+
+  const actualizarPassword = async() => {
+    try{
+      await updatePasswordById(datosIniciales.id, formData)
+      onClose();
+    } catch(error){
+      console.log("Error al actualizar la contraseña: ", error.message);
+      alert("Error al actualizar la contraseña. Intentelo nuevamente.");
+    }
+  }
 
   if (!isOpen) return null;
 
@@ -69,10 +93,10 @@ export default function PasswordModal({
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-xl font-bold text-gray-800 mb-4">
-          {initialData ? 'Editar contraseña' : 'Agregar nueva contraseña'}
+          {edicion ? 'Editar contraseña' : 'Agregar nueva contraseña'}
         </h2>
         
-        <form onSubmit={handleSubmit}>
+        <form>
 
           <input type="hidden" name="usuario_id" value={formData.usuario_id} />
 
@@ -82,13 +106,13 @@ export default function PasswordModal({
               <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
               <input
                 type="text"
-                name="título"
-                value={formData.titulo}
+                name="titulo"
+                defaultValue={formData.titulo}
                 onChange={handleChange}
-                className={`w-full p-2 border rounded-md ${errors.título ? 'border-red-500' : 'border-gray-300'}`}
-                placeholder="Ej: Correo personal"
+                className={`w-full p-2 border rounded-md ${errors.titulo ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder="Ej: SentinelKey "
               />
-              {errors.título && <p className="text-red-500 text-xs mt-1">{errors.título}</p>}
+              {errors.titulo && <p className="text-red-500 text-xs mt-1">{errors.titulo}</p>}
             </div>
 
             {/* Campo: Sitio relacionado */}
@@ -97,10 +121,10 @@ export default function PasswordModal({
               <input
                 type="url"
                 name="sitio_relacionado"
-                value={formData.sitio_relacionado}
+                defaultValue={formData.sitio_relacionado}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded-md"
-                placeholder="Ej: https://gmail.com"
+                placeholder="Ej: https://sentinelkey.com"
               />
             </div>
 
@@ -110,7 +134,7 @@ export default function PasswordModal({
               <input
                 type="password"
                 name="password"
-                value={formData.password}
+                defaultValue={formData.password}
                 onChange={handleChange}
                 className={`w-full p-2 border rounded-md ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="••••••••"
@@ -124,8 +148,8 @@ export default function PasswordModal({
             <Boton tipo="default" onClick={onClose}>
               Cancelar
             </Boton>
-            <Boton tipo="guardar" type="submit">
-              {initialData ? 'Guardar cambios' : 'Agregar'}
+            <Boton tipo="guardar" type="submit" onClick={handleSubmit}>
+              {edicion ? 'Guardar cambios' : 'Agregar'}
             </Boton>
           </div>
         </form>

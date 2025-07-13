@@ -1,8 +1,11 @@
+
 import { supabase } from '../../../auth/supabaseAuth.js';
 import {
   hashPassword,
   unhashPassword
 } from '../../../service/passwordHandler.js'
+
+
 
 export const fetchPasswordsByUserId = async (userId) => {
   const { data, error } = await supabase
@@ -28,31 +31,33 @@ export const deletePasswordsByIds = async (ids) => {
   if (error) throw error;
 };
 
-export const updatePasswordById = async (userId, id, formData) => {
+export const updatePasswordById = async (id, formData) => {
+  console.log(id);
+  console.log(formData)
   const dataToUpdate = { ...formData }; 
-  if(dataToUpdate.valor) { 
-    dataToUpdate.password_cifrada = await hashPassword(userId, dataToUpdate.valor);
-    delete dataToUpdate.valor; 
+  if(dataToUpdate.password) { 
+    dataToUpdate.password_cifrada = await hashPassword(dataToUpdate.usuario_id, dataToUpdate.password);
+    delete dataToUpdate.password; 
   }
   const { error } = await supabase
     .from('passwords')
     .update(dataToUpdate) 
     .eq('id', id)
-    .eq('usuario_id', userId);
+    .eq('usuario_id', dataToUpdate.usuario_id);
   if (error) throw error;
 };
 
 
-export const agregarPassword = async (userId, passwordData) => {
-  if (!passwordData || typeof passwordData.valor === 'undefined') {
+export const agregarPassword = async(passwordData) => {
+  if (!passwordData || typeof passwordData.password === 'undefined') {
     throw new Error("no se recibio password.");
   }
 
   const dataToInsert = {
-    usuario_id: userId,
+    usuario_id: passwordData.usuario_id,
     titulo: passwordData.titulo,
     sitio_relacionado: passwordData.sitio_relacionado,
-    password_cifrada: await hashPassword(userId, passwordData.valor),
+    password_cifrada: await hashPassword(passwordData.usuario_id, passwordData.password),
   };
 
 console.log(dataToInsert)

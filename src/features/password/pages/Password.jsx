@@ -4,22 +4,19 @@ import { useAuthStore } from '../../../stores/authStore.js';
 import {
   fetchPasswordsByUserId,
   deletePasswordsByIds,
-  updatePasswordById,
-  agregarPassword
 } from '../service/password.service.js';
 import classNames from 'classnames';
 import Boton from '../../../components/Button/Button.jsx';
-import PasswordModal from '../../../components/PasswordModal/PasswordModal.jsx';
+import PasswordModal from '../components/PasswordModal.jsx';
 
 
 export default function Password() {
-  const [passwords, setPasswords] = useState([]);
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState({ titulo: "", valor: "" });
-  const [showModal, setShowModal] = useState(false);
-  const [newPassword, setNewPassword] = useState({ titulo: "", valor: "", sitio_relacionado: "" });
-  const [isPressing, setIsPressing] = useState(false);
+  const [passwords, setPasswords] = useState([]); //almacena las contraseñas del usuario
+  const [selectedIds, setSelectedIds] = useState([]); //lista de paswordId seleccionados.
+  const [editingId, setEditingId] = useState(null); //Id de password a editar
+  //const [formData, setFormData] = useState({ titulo: "", valor: "" }); //datos de un fomulario de edicion
+  const [showModal, setShowModal] = useState(false); //abre o cierra el modal
+  const [isPressing, setIsPressing] = useState(false); //para saber si uno de los botones está presionado.
   const pressTimer = useRef(null);
   const LONG_PRESS_THRESHOLD = 2000;
 
@@ -114,36 +111,26 @@ export default function Password() {
 
   const handleEdit = (password) => {
     setEditingId(password.id);
-    setFormData({ titulo: password.titulo, valor: password.valor });
+    setShowModal(true);
+    //setFormData({ titulo: password.titulo, valor: password.valor });
   };
 
-  const handleUpdate = async () => {
-    try {
-      await updatePasswordById(user.id, editingId, formData);
-      setEditingId(null);
-      fetchPasswords(user.id);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
+  const handleModalClose = () =>{
+    setShowModal(false);
+    setEditingId(null);
+    fetchPasswords(user.id);
+  }
 
-  const handleAddNewPassword = async () => {
-    if (!newPassword.titulo || !newPassword.valor) {
-      // Basic validation
-      alert("Por favor, completa el título y la contraseña.");
-      return;
-    }
+  // const handleUpdate = async () => {
+  //   try {
+  //     await updatePasswordById(user.id, editingId, formData);
+  //     setEditingId(null);
+  //     fetchPasswords(user.id);
+  //   } catch (error) {
+  //     console.error(error.message);
+  //   }
+  // };
 
-    try {
-      await agregarPassword(user.id, newPassword); 
-      setNewPassword({ titulo: "", valor: "", sitio_relacionado: "" }); 
-      setShowModal(false); 
-      fetchPasswords(user.id); 
-    } catch (error) {
-      console.error("Error al agregar nueva contraseña:", error.message);
-      alert("Error al guardar la contraseña. Inténtalo de nuevo.");
-    }
-  };
 
   return (
     <div className="p-4">
@@ -156,67 +143,10 @@ export default function Password() {
         ➕ Agregar nueva contraseña
       </button>
 
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md relative">
-            <h2 className="text-xl font-semibold mb-4">
-              Agregar nueva contraseña
-            </h2>
-
-            <input
-              type="text"
-              placeholder="Nombre del servicio (Ej: Gmail)"
-              value={newPassword.titulo}
-              onChange={(e) =>
-                setNewPassword({ ...newPassword, titulo: e.target.value })
-              }
-              className="w-full mb-3 p-2 border rounded"
-            />
-
-            <input
-              type="text"
-              placeholder="Sitio relacionado"
-              value={newPassword.sitio_relacionado}
-              onChange={(e) =>
-                setNewPassword({ ...newPassword, sitio_relacionado: e.target.value })
-              }
-              className="w-full mb-3 p-2 border rounded"
-            />
-
-            <input
-              type="text"
-              placeholder="Contraseña"
-              value={newPassword.valor}
-              onChange={(e) =>
-                setNewPassword({ ...newPassword, valor: e.target.value })
-              }
-              className="w-full mb-4 p-2 border rounded"
-            />
-
-            <div className="flex justify-end space-x-2">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-              >
-                Cancelar
-              </button>
-              <button
-              onClick={handleAddNewPassword}
-              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-500"
-            >
-              Guardar
-            </button>
-            </div>
-
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-2 right-3 text-gray-500 hover:text-black"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
+      <PasswordModal 
+        isOpen={showModal} 
+        onClose={handleModalClose}
+        datosIniciales={{usuario_id: user.id}}/>
 
       {passwords.length === 0 && <p>No hay contraseñas cargadas.</p>}
 
@@ -232,35 +162,15 @@ export default function Password() {
             )}
           >
             {editingId === pwd.id ? (
-              <div>
-                <label>Título</label>
-                <input
-                  type="text"
-                  value={formData.nombre}
-                  onChange={(e) =>
-                    setFormData({ ...formData, titulo: e.target.value })
-                  }
-                  className="w-full mb-2 p-1 border rounded"
-                />
-                <label>Password</label>
-                <input
-                  type="password"
-                  value={formData.valor}
-                  onChange={(e) =>
-                    setFormData({ ...formData, valor: e.target.value })
-                  }
-                  className="w-full mb-2 p-1 border rounded"
-                />
-                <button
-                  onClick={handleUpdate}
-                  className="bg-green-600 text-white px-2 py-1 rounded"
-                >
-                  Guardar
-                </button>
-              </div>
+              
+              <PasswordModal 
+                isOpen={showModal}
+                onClose={handleModalClose}
+                edicion={true}
+                datosIniciales={{usuario_id: user.id, id: editingId}}
+              />
             ) : (
-              <div
-              >
+              <div>
                 <h2 className="font-semibold text-lg">🔐 {pwd.titulo}</h2>
                 <div className="flex justify-between mt-2">
                   
