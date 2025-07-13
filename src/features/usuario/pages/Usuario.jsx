@@ -54,9 +54,8 @@ export default function Usuario(data) {
 
     cargaDeDatos();
 
-  },[]); //<- ESLint te sugiere sacar el array de dependencias vacío... No lo hagas, se rompe todo :)
-
-
+  },[data?.usuario?.id]);
+  
   if (cargando) {
     return (
       <div className="flex justify-center mt-8 mb-4">

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { ShieldCheck, LockKeyhole } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 import { useAuthStore } from "../../stores/authStore";
 
 
@@ -18,7 +18,7 @@ export default function LandingPage() {
 
   return (   
     <>
-      <motion.section
+      <Motion.section
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -39,9 +39,9 @@ export default function LandingPage() {
           <button className={buttonVariants.outline} onClick={() => navigate("/signin")}>Ya tengo cuenta</button>
         </div>)}
         
-      </motion.section>
+      </Motion.section>
 
-      <motion.section
+      <Motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.6 }}
@@ -62,7 +62,7 @@ export default function LandingPage() {
             <p className="text-gray-600 text-sm">Solo vos podés ver tus contraseñas. No almacenamos ni accedemos a tus claves maestras.</p>
           </div>
         </div>
-      </motion.section>
+      </Motion.section>
     </>      
   );
 }

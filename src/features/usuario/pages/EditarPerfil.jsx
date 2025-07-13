@@ -39,7 +39,7 @@ export default function EditarPerfil(data){
       };
 
       cargarDatosparaActualizar();
-    },[]);
+    },[data?.usuario?.id]);
 
     const actualizar = async() => {
       try{
