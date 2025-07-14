@@ -12,8 +12,10 @@
 
 - [👥 Integrantes](#-integrantes)
 - [📄 Desarrollo](#-desarrollo)
-  - [💡 Desarrollo](#integrantes)
+  - [💡 Introducción](#-introducción)
   - [✨ Características Principales](#-características-principales)
+  - [🗂️ Estructura del proyecto](#️-estructura-del-proyecto)
+  - [📐 Wireframe del proyecto (MVP)](#-wireframe-del-proyecto-mvp)
   - [🔗 Enlaces útiles](#enlaces-útiles)
 - [🗃️ Uso de la base de datos](#️-uso-de-la-base-de-datos)
   - [🗂 Estructura de la Base de Datos](#-estructura-de-la-base-de-datos)
@@ -87,6 +89,12 @@ SentinelKey/
 ├── vite.config.js
 └── README.md
 ```
+
+### 📐 Wireframe del proyecto (MVP)
+---
+![mvp-1](docs\images\sentinelkey_mvp1.png)
+
+---
 
 ### 🔗 Enlaces útiles
 
