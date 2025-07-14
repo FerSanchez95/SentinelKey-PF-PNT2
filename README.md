@@ -92,7 +92,7 @@ SentinelKey/
 
 ### 📐 Wireframe del proyecto (MVP)
 ---
-![mvp-1](docs\images\sentinelkey_mvp1.png)
+![mvp-1](docs/images/sentinelkey_mvp1.png)
 
 ---
 
