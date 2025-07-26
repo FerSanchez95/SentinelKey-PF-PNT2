@@ -173,7 +173,7 @@ export default function Password() {
           <div
             key={pwd.id}
             className={classNames(
-              "rounded-xl border p-4 shadow-md cursor-pointer hover:shadow-lg transition",
+              "rounded-xl border border-gray-200 p-4 shadow-md cursor-pointer hover:shadow-lg transition",
               selectedIds.includes(pwd.id)
                 ? "bg-blue-100 border-blue-500"
                 : "bg-white"
@@ -224,6 +224,10 @@ export default function Password() {
             )}
           </div>
         ))}
+      </div>
+      <div className='mt-6'>
+        <p className="text-sm text-gray-500">Presiona y mantén 'Obtener' para alternar la selección de ítems.</p>
+
       </div>
 
       {selectedIds.length > 0 && (

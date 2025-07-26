@@ -60,7 +60,7 @@ export default function SignIn() {
           <form className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
-                Dirección de eMail
+                Dirección de E-Mail
               </label>
               <div className="mt-2">
                 <input
@@ -109,7 +109,7 @@ export default function SignIn() {
                   loading ? 'bg-indigo-400' : 'bg-indigo-600'
                 } px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
               >
-                {loading ? 'Signing in...' : 'Sign in'}
+                {loading ? 'Ingresando...' : 'Ingresar'}
               </button>
             </div>
           </form>

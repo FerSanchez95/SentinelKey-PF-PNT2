@@ -30,7 +30,7 @@ export default function PasswordModal({
     if (datosIniciales) {
       setFormData(datosIniciales);
     }
-  }, []);
+  }, [datosIniciales]);
 
   // Cerrar con ESC o clic fuera
   useEffect(() => {
