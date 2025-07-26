@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useAuthStore } from '../../../stores/authStore.js';
 import {
   fetchPasswordsByUserId,
+  revealPassword,
   deletePasswordById,
   deletePasswordsByIds,
 } from '../service/password.service.js';
@@ -26,8 +27,7 @@ export default function Password() {
 
   useEffect(() => {
     if (user) fetchPasswords(user.id);
-  }, [user]);
-
+  }, [user, passwords]);
   const fetchPasswords = async (userId) => {
     try {
       const data = await fetchPasswordsByUserId(userId);
@@ -36,7 +36,6 @@ export default function Password() {
       console.error(error.message);
     }
   };
-
 
   const handleSelect = (id) => {
     setSelectedIds((prev) =>
@@ -78,14 +77,15 @@ export default function Password() {
 
   //Función que controla que pasa cuando se deja de presionar 
   //el component
-  const handleClick = (passwordObtenida) => {
+  const handleClick = async(passwordObtenida) => {
     
     if (pressTimer.current) {
       clearTimeout(pressTimer.current); 
       pressTimer.current = null;
 
       if (isPressing) {
-        handleCopyToClipboard(passwordObtenida);
+        const valordescifrado = await revealPassword(passwordObtenida);
+        handleCopyToClipboard(valordescifrado);
       }
     }
     setIsPressing(false);
@@ -185,7 +185,7 @@ export default function Password() {
                 isOpen={showModal}
                 onClose={handleModalClose}
                 edicion={true}
-                datosIniciales={{usuario_id: user.id, id: editingId}}
+                datosIniciales={pwd}
               />
             ) : ( !eliminacion ? 
               (<div>
@@ -204,7 +204,7 @@ export default function Password() {
                     onPointerLeave={handlePointerLeave}
                     onClick={(e) => {
                       e.preventDefault(); // Evita conflictos con el long press
-                      handleClick(pwd.valor);
+                      handleClick(pwd);
                     }}>
                       {selectedIds.includes(pwd.id) ? "Selecionado": "Obtener"}
                   </Boton>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Boton from '../../../components/Button/Button.jsx';
-import {agregarPassword, updatePasswordById} from '../service/password.service.js';
+import { manageSubmit, validateData} from '../service/password.service.js';
 
 export default function PasswordModal({
   isOpen,
@@ -12,19 +12,27 @@ export default function PasswordModal({
   const dialogRef = useRef();
   const [formData, setFormData] = useState({
     usuario_id: datosIniciales.usuario_id,
+    id: datosIniciales.id,
     titulo: '',
     sitio_relacionado: '',
     password: '',
   });
   const [errors, setErrors] = useState({});
 
-  // Inicializar datos si estamos en modo edición
+  /*
+  Inicializar datos si estamos en modo edición
+  Si se ingresan los datos desde 'password' 
+  se deben actualizar solo los que se ingresan 
+  por el formulario del modal.
+  */
+  
   useEffect(() => {
     if (datosIniciales) {
       setFormData(datosIniciales);
     }
   }, []);
 
+  
   // Cerrar con ESC o clic fuera
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -39,45 +47,23 @@ export default function PasswordModal({
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.titulo || formData.titulo.trim() === "") newErrors.titulo = 'El titulo es requerido';
-    if (!formData.password || formData.password.trim() === "") newErrors.password = 'La contraseña es requerida';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async(e) => {
     e.preventDefault();
-    if (validate()) {
-      if (edicion && datosIniciales.id !== undefined){
-        await actualizarPassword();
-      } else {
-        await agregarContraseña();
-      }  
-    }
-  };
-
-  const agregarContraseña = async() =>{
+    const newErrors = validateData(formData);
+  
+    if (Object.keys(newErrors).length === 0) {
       try {
-        await agregarPassword(formData); 
+        await manageSubmit(formData);
         setFormData({ titulo: "", sitio_relacionado: "", password: ''}); 
         onClose();
-      } catch (error) {
-        console.error("Error al agregar nueva contraseña:", error.message);
-        alert("Error al guardar la contraseña. Inténtalo de nuevo.");
-      };
-  }
-
-  const actualizarPassword = async() => {
-    try{
-      await updatePasswordById(datosIniciales.id, formData)
-      onClose();
-    } catch(error){
-      console.log("Error al actualizar la contraseña: ", error.message);
-      alert("Error al actualizar la contraseña. Intentelo nuevamente.");
+      } catch (error){
+        console.error("Error al procesar la contraseña:", error.message);
+        alert("Error al procesar la contraseña. Inténtalo de nuevo.");
+      }
+    } else {
+      setErrors(newErrors);
     }
-  }
+  };
 
   if (!isOpen) return null;
 
@@ -118,13 +104,14 @@ export default function PasswordModal({
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Sitio web</label>
               <input
-                type="url"
+                type="text"
                 name="sitio_relacionado"
                 defaultValue={formData.sitio_relacionado}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className={`w-full p-2 border border-gray-300 rounded-md ${errors.sitio_relacionado ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Ej: https://sentinelkey.com"
               />
+              {errors.sitio_relacionado && <p className="text-red-500 text-xs mt-1">{errors.sitio_relacionado}</p>}
             </div>
 
             {/* Campo: Contraseña */}
