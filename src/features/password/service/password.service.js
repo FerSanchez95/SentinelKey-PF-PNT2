@@ -99,7 +99,6 @@ export const updatePasswordById = async (formData) => {
     formData.id
   );
 
-
   const dataToUpdate = { ...formData };
   if (!dataToUpdate.password) {
     dataToUpdate.password_cifrada = fetchedData.password_cifrada;
