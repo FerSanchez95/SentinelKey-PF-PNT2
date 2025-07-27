@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import Boton from '../../../components/Button/Button.jsx';
 import Tag from '../../../components/Tag/Tag.jsx';
 import PasswordModal from '../components/PasswordModal.jsx';
+import { toast } from 'react-toastify';
 
 
 export default function Password() {
@@ -48,11 +49,11 @@ export default function Password() {
 
     navigator.clipboard.writeText(passwordToCopy)
       .then(() => {
-        alert(`¡Contraseña copiada al porta-papeles!`);
+        toast.success(`¡Contraseña copiada al porta-papeles!`);
       })
       .catch(err => {
         console.error('Falló la obtención de la contraseña: ', err);
-        alert('Error al copiar la información, intentelo nuevamente!');
+        toast.error('Error al copiar la información, intentelo nuevamente!');
       });
   }
   
