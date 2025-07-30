@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Boton from "../../../components/Button/Button.jsx";
 import { manageSubmit, validateData } from "../service/password.service.js";
+import { toast } from "react-toastify";
 
 export default function PasswordModal({
   isOpen,
@@ -19,18 +20,13 @@ export default function PasswordModal({
   });
   const [errors, setErrors] = useState({});
 
-  /*
-  Inicializar datos si estamos en modo edición
-  Si se ingresan los datos desde 'password' 
-  se deben actualizar solo los que se ingresan 
-  por el formulario del modal.
-  */
 
   useEffect(() => {
     if (datosIniciales) {
       setFormData(datosIniciales);
     }
-  }, [datosIniciales]);
+  },[]);
+  
 
   // Cerrar con ESC o clic fuera
   useEffect(() => {
@@ -47,22 +43,29 @@ export default function PasswordModal({
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
     const newErrors = validateData(formData);
 
     if (Object.keys(newErrors).length === 0) {
       try {
         await manageSubmit(formData);
-        setFormData({ titulo: "", sitio_relacionado: "", password: "" });
-        onClose();
+        setFormData({});
+        datosIniciales = {};
+        handleClose();
       } catch (error) {
         console.error("Error al procesar la contraseña:", error.message);
-        alert("Error al procesar la contraseña. Inténtalo de nuevo.");
+        toast.error("Error al procesar la contraseña. Inténtalo de nuevo.");
       }
     } else {
       setErrors(newErrors);
     }
   };
+
+  const handleClose = () =>{
+    setErrors({});
+    onClose();
+  }
 
   if (!isOpen) return null;
 
@@ -151,7 +154,7 @@ export default function PasswordModal({
 
           {/* Botones */}
           <div className="flex justify-end gap-3 mt-6">
-            <Boton tipo="default" type="button" onClick={onClose}>
+            <Boton tipo="default" type="button" onClick={handleClose}>
               Cancelar
             </Boton>
             <Boton tipo="guardar" type="submit">

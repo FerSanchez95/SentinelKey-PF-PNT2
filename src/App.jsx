@@ -18,6 +18,7 @@ function App() {
         pauseOnHover
         theme="colored"
         transition={Bounce}
+        className='text-sm'
       />
       <Router />
     </>

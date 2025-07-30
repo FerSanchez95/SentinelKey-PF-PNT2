@@ -59,7 +59,6 @@ export const validateData = (formData) => {
 
 export const manageSubmit = async (formData) => {
   // Toma la información desde 'formData' para decidir que acción tomar
-
   // Si 'formData' trae un 'id' quiere decir que es un password existente
   // que se está editando.
   try {
