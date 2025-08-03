@@ -48,19 +48,19 @@ const NavBar = () => {
   };
 
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className="bg-gray-200">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="flex items-center">
-                <button className="text-white font-bold hover:text-indigo-300" onClick={() => {navigate("/")}}>SentinelKey</button>
+                <button className="text-gray-700 font-bold hover:text-indigo-300" onClick={() => {navigate("/")}}>SentinelKey</button>
               </div>
 
               <div className="hidden sm:block sm:ml-6">
                 <div className="flex space-x-4">
                   <NavLink to="/passwords" className={({ isActive }) => classNames(
-                    isActive ? 'bg-gray-900 text-white border-b-4 border-transparent hover:border-b-indigo-500' : 'text-gray-300 border-b-4 border-transparent  hover:bg-gray-700 hover:text-white  hover:border-b-indigo-500',
+                    isActive ? 'bg-gray-700 text-white border-b-4 border-transparent hover:border-b-indigo-500' : 'text-gray-700 border-b-4 border-transparent  hover:bg-gray-700 hover:text-white  hover:border-b-indigo-500',
                     'rounded-md px-3 py-2 text-sm font-medium'
                   )}>
                     Bóveda
@@ -69,7 +69,7 @@ const NavBar = () => {
                   {user ? (
                     <>
                       <NavLink to="/perfil" className={({ isActive }) => classNames(
-                        isActive ? 'bg-gray-900 text-white border-b-4 border-transparent hover:border-b-indigo-500' : 'text-gray-300 border-b-4 border-transparent  hover:bg-gray-700 hover:text-white  hover:border-b-indigo-500',
+                        isActive ? 'bg-gray-700 text-white border-b-4 border-transparent hover:border-b-indigo-500' : 'text-gray-700 border-b-4 border-transparent  hover:bg-gray-700 hover:text-white  hover:border-b-indigo-500',
                         'rounded-md px-3 py-2 text-sm font-medium'
                       )}>
                         Perfil
@@ -86,13 +86,13 @@ const NavBar = () => {
                   ) : (
                     <>
                       <NavLink to="/signin" className={({ isActive }) => classNames(
-                        isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        isActive ? 'bg-gray-700 text-white' : 'text-gray-700 border-b-4 border-transparent hover:bg-gray-700  hover:text-white hover:border-b-indigo-500',
                         'rounded-md px-3 py-2 text-sm font-medium'
                       )}>
                         Ingresar
                       </NavLink>
                       <NavLink to="/signup" className={({ isActive }) => classNames(
-                        isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        isActive ? 'bg-gray-700 text-white' : 'text-gray-700 border-b-4 border-transparent hover:bg-gray-700  hover:text-white hover:border-b-indigo-500 ',
                         'rounded-md px-3 py-2 text-sm font-medium'
                       )}>
                         Registrarse
@@ -104,7 +104,7 @@ const NavBar = () => {
 
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {user && (
-                  <span className="text-gray-300 mr-4 hidden sm:inline">
+                  <span className="text-gray-700 mr-4 hidden sm:inline">
                     🟢 {renderEmailUser(user)}
                   </span>
                 )}

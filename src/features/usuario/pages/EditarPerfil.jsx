@@ -4,13 +4,13 @@ import { obtenerDatosUsuario, actualizarUsuario } from "../service/usuario.servi
 import Boton from "../../../components/Button/Button.jsx";
 import Tag from "../../../components/Tag/Tag.jsx";
 import { Home } from 'lucide-react';
+import { toast } from "react-toastify";
 
 
 export default function EditarPerfil(data){
 
     const navigate = useNavigate();
     const [error, setError] = useState(null);
-    const [actualizacionRealizada, setActualizacionRealizada] = useState(null);
     const [cargando, setCargando] = useState(false);
     const [formData, setFormData] = useState({nombre: '', email: ''});
 
@@ -44,10 +44,11 @@ export default function EditarPerfil(data){
     const actualizar = async() => {
       try{
           await actualizarUsuario(data?.usuario?.id, formData);
-          setActualizacionRealizada("¡Actualización exitosa! Volviendo al perfil.")
-        
+          toast.success("¡Actualización exitosa!");
+          toast.info("Volviendo al perfil")       
       } catch(error){
         console.log(error.message);
+        toast.error(error.messega);
         setError(error.message);
       }
     };
@@ -98,13 +99,8 @@ export default function EditarPerfil(data){
             <p className="mt-1 text-sm text-gray-400">Información de tu cuenta</p>
           </div>
     
-          {cargando ? 'Cargando datos...' : ''}
-          {actualizacionRealizada && (
-                    <Tag  type="success">{actualizacionRealizada}</Tag>
-                  )}
-          {error && (
-                    <Tag  type="error">{error}</Tag>
-                  )}                  
+          {cargando ? 'Cargando datos...' : ''}  
+          {error ? <Tag tipo='error'>error</Tag> : ''}                
           
           <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md bg-white p-6 rounded-lg shadow space-y-6">
             <form >
